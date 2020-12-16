@@ -66,10 +66,11 @@ class AuthController extends Controller
         $user->email = $request->email;
         $user->password = bcrypt($request->password);
         $user->save();
-
+        $tokenResult = $user->createToken('authToken')->plainTextToken;
         return response()->json([
             'status_code'=>200,
             'message'=>'Usuario registrado',
+            'token' => $tokenResult
         ]);
     }
     /**

@@ -21,7 +21,8 @@
 </head>
 <body>
     <div id="app">
-        <example-component></example-component>
+        <navbar></navbar>
+        <router-view></router-view>
     </div>
 </body>
 </html>
