@@ -39,7 +39,7 @@ export default {
   methods: {
     logout() {
       this.$store.dispatch("logoutUser");
-      this.$router.push("/home");
+      this.$router.push("/evento");
     },
   },
 };

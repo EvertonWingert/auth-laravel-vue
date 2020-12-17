@@ -10,14 +10,14 @@ export default {
         }
     },
     actions: {
-         loginUser(context, payload) {
-            api.post("/login", payload).then(response =>{
+         async loginUser(context, payload) {
+            const response = await api.post("/login", payload);
             if (response.data['status_code'] == 200) {
                 context.commit("UPDATE_LOGIN", true);
-                console.log(response.data.token);
                 $cookies.set("token", response.data.token);
             }
-            });
+            return response;
+           
         },
         registerUser(context, payload){
             api.post("/register", payload).then(response => {

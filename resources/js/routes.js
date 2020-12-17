@@ -1,6 +1,6 @@
 import Login from "./components/LoginComponent";
 import Register from "./components/RegisterComponent";
-import Home from "./components/HomeComponent";
+import Evento from "./components/HomeComponent";
 import Welcome from "./components/WelcomeComponent";
 
 import Vue from "vue";
@@ -11,6 +11,7 @@ const router = new VueRouter({
     routes: [
         {
             path: "/",
+            name: 'entrada',
             component: Welcome,
             meta: {
                 guest: true
@@ -18,6 +19,7 @@ const router = new VueRouter({
         },
         {
             path: "/login",
+            name: 'login',
             component: Login,
             meta: {
                 guest: true
@@ -25,14 +27,16 @@ const router = new VueRouter({
         },
         {
             path: "/register",
+            name: 'register',
             component: Register,
             meta: {
                 guest: true
             }
         },
         {
-            path: "/home",
-            component: Home,
+            path: "/evento",
+            name: 'evento',
+            component: Evento,
             meta: {
                 requiresAuth: true
             }
@@ -43,7 +47,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.guest)) {
         if ($cookies.get("token")) {
-            next("/home");
+            next("/evento");
         } else {
             next();
         }

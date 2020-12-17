@@ -12,10 +12,13 @@ import router from './routes';
 import Vuex from 'vuex';
 import storeData from "./store";
 import VueCookies from 'vue-cookies';
+import Vuelidate from 'vuelidate';
 
 //Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueCookies);
+Vue.use(Vuelidate);
+
 
 const store = new Vuex.Store(
    storeData
@@ -27,6 +30,7 @@ Vue.component('navbar', require('./components/NavBarComponent.vue').default);
 Vue.component('home', require('./components/HomeComponent.vue').default);
 Vue.component('welcome', require('./components/WelcomeComponent.vue').default);
 Vue.component('app', require('./components/App.vue').default);
+Vue.component('erroNotificacao', require('./components/ErroNotificacao.vue').default);
 
 
 const app = new Vue({

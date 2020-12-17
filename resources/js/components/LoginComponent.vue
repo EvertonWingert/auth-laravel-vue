@@ -31,6 +31,7 @@
             </div>
           </div>
           <button  @click.prevent="Logar" type="submit" class="btn btn-primary">Enviar</button>
+          <h1 v-if="erro">{{erroMessage}}</h1>
         </form>
       </div>
     </div>
@@ -38,20 +39,31 @@
 </template>
 
 <script>
+import ErroNotificacao from './ErroNotificacao.vue';
+const { validationMixin, default: Vuelidate } = require('vuelidate')
+const { required, minLength } = require('vuelidate/lib/validators')
+
+
 
 export default {
+  components: { ErroNotificacao },
   data() {
     return {
       formData: {
         email: "",
         password: "",
       },
+      erro: [],
     };
   },
   methods: {
-    Logar() {
-      this.$store.dispatch("loginUser",this.formData);
-      //this.$router.push("/home");
+     Logar() {
+      this.$store.dispatch("loginUser",this.formData).then(response =>{
+        console.log(response.data.message);
+        this.erro = true;
+        this.erroMessage = response.data.message;
+        //this.$router.push("/home");
+      });
     },
   },
 };
