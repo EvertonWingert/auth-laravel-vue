@@ -3,7 +3,17 @@
     <div class="card">
       <div class="card-header">Login</div>
       <div class="card-body">
-        <form>
+      <p v-if="errors.length">
+    <b>Por favor, corrija o(s) seguinte(s) erro(s):</b>
+    <ul>
+      <li v-for="(error,index) in errors" :key="index">
+        <div class="alert alert-danger" role="alert">
+ {{error}}
+</div>
+      </li>
+    </ul>
+  </p>
+        <form @submit.prevent="Logar">
           <div class="mb-3 row">
             <label for="staticEmail" class="col-sm-2 col-form-label"
               >Email</label
@@ -12,7 +22,7 @@
               <input
                 type="email"
                 class="form-control"
-                v-model="formData.email"
+                v-model="email"
                 id="inputEmail"
               />
             </div>
@@ -25,13 +35,12 @@
               <input
                 type="password"
                 class="form-control"
-                v-model="formData.password"
+                v-model="password"
                 id="inputPassword"
               />
             </div>
           </div>
-          <button  @click.prevent="Logar" type="submit" class="btn btn-primary">Enviar</button>
-          <h1 v-if="erro">{{erroMessage}}</h1>
+          <button type="submit" class="btn btn-primary">Enviar</button>
         </form>
       </div>
     </div>
@@ -39,31 +48,40 @@
 </template>
 
 <script>
-import ErroNotificacao from './ErroNotificacao.vue';
-const { validationMixin, default: Vuelidate } = require('vuelidate')
-const { required, minLength } = require('vuelidate/lib/validators')
-
-
+import ErroNotificacao from "./ErroNotificacao.vue";
+const { validationMixin, default: Vuelidate } = require("vuelidate");
+const { required, minLength } = require("vuelidate/lib/validators");
 
 export default {
   components: { ErroNotificacao },
   data() {
     return {
-      formData: {
-        email: "",
-        password: "",
-      },
-      erro: [],
+      errors: [],
+      email: null,
+      password: null,
     };
   },
   methods: {
-     Logar() {
-      this.$store.dispatch("loginUser",this.formData).then(response =>{
-        console.log(response.data.message);
-        this.erro = true;
-        this.erroMessage = response.data.message;
-        //this.$router.push("/home");
-      });
+    checkForm() {
+      if (this.email == null) {
+        this.errors.push("Digite um email");
+      }
+      if (this.password == null) {
+        this.errors.push("Digite uma senha");
+      }
+    },
+    Logar() {
+      //Validar dados
+      this.checkForm();
+
+      this.$store
+        .dispatch("loginUser", { email: this.email, password: this.password })
+        .then((response) => {
+          console.log(response.data.message);
+          this.erro = true;
+          //this.erroMessage = response.data.message;
+          //this.$router.push("/home");
+        });
     },
   },
 };
