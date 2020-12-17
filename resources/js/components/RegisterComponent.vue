@@ -59,12 +59,11 @@ export default {
         email: "",
         password: "",
       },
-      loading: false,
     };
   },
   methods: {
     Register(e) {
-      (this.loading = true), e.preventDefault();
+    e.preventDefault();
       axios.get("/sanctum/csrf-cookie").then((response) => {
         axios
           .post("/api/register", this.formData)
@@ -73,7 +72,6 @@ export default {
             this.$router.push('/home');
           });
       });
-      this.loading = false;
     },
   },
 };

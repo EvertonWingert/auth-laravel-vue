@@ -9,7 +9,16 @@ require('./bootstrap');
 window.Vue = require('vue');
 import VueRouter from 'vue-router';
 import routes from './routes';
+import Vuex from 'vuex'
+import storeData from "./store";
+
 Vue.use(VueRouter);
+Vue.use(Vuex)
+
+const store = new Vuex.Store(
+   storeData
+)
+
 
 /**
  * The following block of code may be used to automatically register your
@@ -22,8 +31,8 @@ Vue.use(VueRouter);
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('register-component', require('./components/RegisterComponent.vue').default);
+Vue.component('login-component', require('./components/LoginComponent.vue').default);
 Vue.component('navbar', require('./components/NavBarComponent.vue').default);
 Vue.component('home', require('./components/HomeComponent.vue').default);
 
@@ -35,5 +44,6 @@ Vue.component('home', require('./components/HomeComponent.vue').default);
 
 const app = new Vue({
     el: '#app',
-    router: new VueRouter(routes)
+    router: new VueRouter(routes),
+    store,
 });
