@@ -7,13 +7,13 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-import VueRouter from 'vue-router';
-import routes from './routes';
+//import VueRouter from 'vue-router';
+import router from './routes';
 import Vuex from 'vuex';
 import storeData from "./store";
 import VueCookies from 'vue-cookies';
 
-Vue.use(VueRouter);
+//Vue.use(VueRouter);
 Vue.use(Vuex);
 Vue.use(VueCookies);
 
@@ -31,6 +31,7 @@ Vue.component('app', require('./components/App.vue').default);
 
 const app = new Vue({
     el: '#app',
-    router: new VueRouter(routes),
+    //router: new VueRouter(routes),
+    router,
     store,
 });
