@@ -1,6 +1,7 @@
 import Login from './components/LoginComponent';
 import Register from './components/RegisterComponent';
 import Home from './components/HomeComponent';
+import Welcome from './components/WelcomeComponent';
 
 export default{
     mode: 'history',
@@ -20,6 +21,10 @@ export default{
             component: Home
 
         },
+        {
+            path: '/',
+            component: Welcome
+        }
         
     ]
 }

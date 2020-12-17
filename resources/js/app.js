@@ -35,6 +35,7 @@ Vue.component('register-component', require('./components/RegisterComponent.vue'
 Vue.component('login-component', require('./components/LoginComponent.vue').default);
 Vue.component('navbar', require('./components/NavBarComponent.vue').default);
 Vue.component('home', require('./components/HomeComponent.vue').default);
+Vue.component('welcome', require('./components/WelcomeComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
