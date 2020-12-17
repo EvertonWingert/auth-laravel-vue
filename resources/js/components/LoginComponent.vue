@@ -50,16 +50,8 @@ export default {
   },
   methods: {
     Logar() {
-      //this.$store.commit("UPDATE_LOGIN", true);
-      this.$store.dispatch("getUsuario",this.$store.state.usuario);
-      console.log(this.formData);
-      /*
-      api.get("/sanctum/csrf-cookie").then((response) => {
-        api.post("/api/login", this.formData).then((response) => {
-          this.$router.push("/home");
-        });
-      });
-      */
+      this.$store.dispatch("loginUser",this.formData);
+      //this.$router.push("/home");
     },
   },
 };

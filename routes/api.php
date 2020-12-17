@@ -14,7 +14,7 @@ Route::post('register',[AuthController::class,'register']);
 
 
 /* Rotas autenticadas */
-Route::group(['middleware' =>['auth:sanctum']], function(){
+Route::middleware('auth:sanctum')->group(function(){
     Route::resource('product', ProductController::class);
     Route::post('logout',[AuthController::class,'logout']);
 

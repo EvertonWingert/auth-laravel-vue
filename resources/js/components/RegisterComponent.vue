@@ -3,7 +3,7 @@
     <div class="card">
       <div class="card-header">Register</div>
       <div class="card-body">
-        <form action="#" @submit.prevent="Register">
+        <form >
           <div class="mb-3 row">
             <label for="staticEmail" class="col-sm-2 col-form-label"
               >Name</label
@@ -43,7 +43,7 @@
               />
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Enviar</button>
+          <button @click.prevent="Register" type="submit" class="btn btn-primary">Enviar</button>
         </form>
       </div>
     </div>
@@ -62,16 +62,9 @@ export default {
     };
   },
   methods: {
-    Register(e) {
-    e.preventDefault();
-      axios.get("/sanctum/csrf-cookie").then((response) => {
-        axios
-          .post("/api/register", this.formData)
-          .then((response) => {
-            console.log(response);
-            this.$router.push('/home');
-          });
-      });
+    Register() {
+      this.$store.dispatch("loginUser",this.formData);
+      //this.$router.push('/home');
     },
   },
 };

@@ -12,4 +12,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+/*
 Route::view('{any}','layouts/app');
+*/
+Route::get('/{vue_capture?}', function () {
+    return view('layouts/app');
+})->where('vue_capture', '[\/\w\.-]*');

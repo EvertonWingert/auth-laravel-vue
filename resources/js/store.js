@@ -1,46 +1,38 @@
-import Axios from "axios";
-import {api} from "./services";
+import { api } from "./services";
 
-export default ({
-    state:{
-        login: false,
-        usuario: {
-            email: "",
-            password: "",
-
-        }
+export default {
+    state: {
+        login: false
     },
-    mutations : {
-        UPDATE_LOGIN(state, payload){
+    mutations: {
+        UPDATE_LOGIN(state, payload) {
             state.login = payload;
-        },
+        }
     },
     actions: {
-        getUsuario(context, payload){
-            /*
-            context.commit("UPDATE_USUARIO", {email: payload.email})
-            Axios.post('http://127.0.0.1:8000/api/login',payload).then(response =>{
-                console.log(response.data.status_code);
-                console.log(response);
-                /*
-                if(response.status == 200){
-                    context.commit("UPDATE_USUARIO", response.data);
+         loginUser(context, payload) {
+            api.post("/login", payload).then(response =>{
+            if (response.data['status_code'] == 200) {
+                context.commit("UPDATE_LOGIN", true);
+                console.log(response.data.token);
+                $cookies.set("token", response.data.token);
+            }
+            });
+        },
+        registerUser(context, payload){
+            api.post("/register", payload).then(response => {
+                if (response.data['status_code'] == 200) {
                     context.commit("UPDATE_LOGIN", true);
-                    console.log(response.data);
-                    console.log(response.data['token']);
-                    console.log(response.data.token);
+                    $cookies.set("token", response.data.token);
+
+                    
                 }
-                
-            })*/
-           
-                Axios.post("/api/login",{
-                    "email": "teste@gmail.cofm",
-                    "password":"1234"
-                }).then((response) => {
-                  //this.$router.push("/home");
-                  console.log(response);
-                });
-              
+            });
+        },
+        logoutUser(context) {
+            context.commit("UPDATE_LOGIN", false);
+            $cookies.remove("token");
+          
         }
-    },
-});
+    }
+};

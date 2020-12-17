@@ -21,8 +21,7 @@
 </head>
 <body>
     <div id="app">
-        <navbar></navbar>
-        <router-view></router-view>
+        <app></app>
     </div>
 </body>
 </html>
