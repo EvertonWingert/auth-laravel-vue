@@ -1,6 +1,6 @@
 import Login from "./components/LoginComponent";
 import Register from "./components/RegisterComponent";
-import Evento from "./components/HomeComponent";
+import Evento from "./components/EventoComponent";
 import Welcome from "./components/WelcomeComponent";
 
 import Vue from "vue";

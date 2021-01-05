@@ -27,6 +27,7 @@
                 class="form-control"
                 v-model="formData.email"
                 id="inputEmail"
+                required
               />
             </div>
           </div>
@@ -40,6 +41,7 @@
                 class="form-control"
                 v-model="formData.password"
                 id="inputPassword"
+                required
               />
             </div>
           </div>
@@ -55,16 +57,23 @@ export default {
   data() {
     return {
       formData: {
-        name: "",
-        email: "",
-        password: "",
+        name: null,
+        email: null,
+        password: null,
       },
     };
   },
   methods: {
     Register() {
-      this.$store.dispatch("loginUser",this.formData);
-      //this.$router.push('/home');
+       this.$store.dispatch("registerUser",this.formData)
+        .then((response) => {
+          if(response.data.status_code == 200){
+            this.$router.push("/home");
+          }else{
+            console.log("Alguma coisa deu errada");
+          }          
+        });
+   
     },
   },
 };

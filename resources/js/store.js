@@ -19,15 +19,13 @@ export default {
             return response;
            
         },
-        registerUser(context, payload){
-            api.post("/register", payload).then(response => {
-                if (response.data['status_code'] == 200) {
-                    context.commit("UPDATE_LOGIN", true);
-                    $cookies.set("token", response.data.token);
-
-                    
-                }
-            });
+        async registerUser(context, payload){
+            const response = await api.post("/register", payload);
+            if (response.data['status_code'] == 200) {
+                context.commit("UPDATE_LOGIN", true);
+                $cookies.set("token", response.data.token);
+            }
+            return response;     
         },
         logoutUser(context) {
             context.commit("UPDATE_LOGIN", false);

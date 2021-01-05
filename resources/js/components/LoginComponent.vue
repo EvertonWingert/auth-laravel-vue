@@ -3,16 +3,6 @@
     <div class="card">
       <div class="card-header">Login</div>
       <div class="card-body">
-      <p v-if="errors.length">
-    <b>Por favor, corrija o(s) seguinte(s) erro(s):</b>
-    <ul>
-      <li v-for="(error,index) in errors" :key="index">
-        <div class="alert alert-danger" role="alert">
- {{error}}
-</div>
-      </li>
-    </ul>
-  </p>
         <form @submit.prevent="Logar">
           <div class="mb-3 row">
             <label for="staticEmail" class="col-sm-2 col-form-label"
@@ -22,8 +12,9 @@
               <input
                 type="email"
                 class="form-control"
-                v-model="email"
+                v-model="formData.email"
                 id="inputEmail"
+                required
               />
             </div>
           </div>
@@ -35,8 +26,9 @@
               <input
                 type="password"
                 class="form-control"
-                v-model="password"
+                v-model="formData.password"
                 id="inputPassword"
+                required
               />
             </div>
           </div>
@@ -48,39 +40,26 @@
 </template>
 
 <script>
-import ErroNotificacao from "./ErroNotificacao.vue";
-const { validationMixin, default: Vuelidate } = require("vuelidate");
-const { required, minLength } = require("vuelidate/lib/validators");
-
 export default {
-  components: { ErroNotificacao },
   data() {
     return {
-      errors: [],
-      email: null,
-      password: null,
+      formData: {
+        email: null,
+        password: null,
+      },
     };
   },
   methods: {
-    checkForm() {
-      if (this.email == null) {
-        this.errors.push("Digite um email");
-      }
-      if (this.password == null) {
-        this.errors.push("Digite uma senha");
-      }
-    },
     Logar() {
-      //Validar dados
-      this.checkForm();
 
       this.$store
-        .dispatch("loginUser", { email: this.email, password: this.password })
+        .dispatch("loginUser", this.formData)
         .then((response) => {
-          console.log(response.data.message);
-          this.erro = true;
-          //this.erroMessage = response.data.message;
-          //this.$router.push("/home");
+          if(response.data.status_code == 200){
+            this.$router.push("/home");
+          }else{
+            console.log("Alguma coisa deu errada");
+          }          
         });
     },
   },

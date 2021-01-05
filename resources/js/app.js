@@ -27,10 +27,9 @@ const store = new Vuex.Store(
 Vue.component('register-component', require('./components/RegisterComponent.vue').default);
 Vue.component('login-component', require('./components/LoginComponent.vue').default);
 Vue.component('navbar', require('./components/NavBarComponent.vue').default);
-Vue.component('home', require('./components/HomeComponent.vue').default);
+Vue.component('evento', require('./components/EventoComponent.vue').default);
 Vue.component('welcome', require('./components/WelcomeComponent.vue').default);
 Vue.component('app', require('./components/App.vue').default);
-Vue.component('erroNotificacao', require('./components/ErroNotificacao.vue').default);
 
 
 const app = new Vue({
