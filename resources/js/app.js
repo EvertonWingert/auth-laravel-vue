@@ -7,14 +7,13 @@
 require('./bootstrap');
 
 window.Vue = require('vue');
-//import VueRouter from 'vue-router';
 import router from './routes';
 import Vuex from 'vuex';
 import storeData from "./store";
 import VueCookies from 'vue-cookies';
 import Vuelidate from 'vuelidate';
 
-//Vue.use(VueRouter);
+
 Vue.use(Vuex);
 Vue.use(VueCookies);
 Vue.use(Vuelidate);
@@ -30,6 +29,7 @@ Vue.component('navbar', require('./components/NavBarComponent.vue').default);
 Vue.component('evento', require('./components/EventoComponent.vue').default);
 Vue.component('welcome', require('./components/WelcomeComponent.vue').default);
 Vue.component('app', require('./components/App.vue').default);
+Vue.component('notfound', require('./components/NotFoundComponent.vue').default);
 
 
 const app = new Vue({

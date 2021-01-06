@@ -1,17 +1,20 @@
+import Vue from "vue";
+import VueRouter from "vue-router";
+
 import Login from "./components/LoginComponent";
 import Register from "./components/RegisterComponent";
 import Evento from "./components/EventoComponent";
 import Welcome from "./components/WelcomeComponent";
+import NotFound from "./components/NotFoundComponent";
 
-import Vue from "vue";
-import VueRouter from "vue-router";
 Vue.use(VueRouter);
+
 const router = new VueRouter({
     mode: "history",
     routes: [
         {
             path: "/",
-            name: 'entrada',
+            name: "entrada",
             component: Welcome,
             meta: {
                 guest: true
@@ -19,7 +22,7 @@ const router = new VueRouter({
         },
         {
             path: "/login",
-            name: 'login',
+            name: "login",
             component: Login,
             meta: {
                 guest: true
@@ -27,7 +30,7 @@ const router = new VueRouter({
         },
         {
             path: "/register",
-            name: 'register',
+            name: "register",
             component: Register,
             meta: {
                 guest: true
@@ -35,11 +38,16 @@ const router = new VueRouter({
         },
         {
             path: "/evento",
-            name: 'evento',
+            name: "evento",
             component: Evento,
             meta: {
                 requiresAuth: true
             }
+        },
+        {
+            path: "/:catchAll(.*)",
+            name: "NotFound",
+            component: NotFound
         }
     ]
 });

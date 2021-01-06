@@ -3,7 +3,7 @@
   <header>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
       <div class="container-fluid">
-        <router-link to="/home"
+        <router-link to="/"
           ><a class="navbar-brand" href="#">Navbar</a></router-link
         >
         <button
@@ -20,7 +20,7 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div class="navbar-nav">
             <div v-if="!$store.state.login">
-              <router-link to="/home">
+              <router-link to="/">
                 <a class="nav-link">Home</a>
               </router-link>
               <router-link v-show="!$store.state.login" to="/register"
