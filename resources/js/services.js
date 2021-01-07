@@ -31,10 +31,10 @@ export const api = {
     },
     //Update
     put(endpoint, body) {
-        return axiosInstance.post(endpoint, body);
+        return axiosInstance.put(endpoint, body);
     },
     //Delete
     delete(endpoint, body) {
-        return axiosInstance.post(endpoint, body);
+        return axiosInstance.delete(endpoint, body);
     },
 };

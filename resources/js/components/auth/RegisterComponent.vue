@@ -55,8 +55,8 @@
               <input
                 type="password"
                 class="form-control"
-                :class="{ 'is-invalid': $v.formData.password.$error }"
                 v-model="formData.password"
+                :class="{ 'is-invalid': $v.formData.password.$error }"
                 @change="$v.formData.password.$touch()"
                 id="inputPassword"
                 required

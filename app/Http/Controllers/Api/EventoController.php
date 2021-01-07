@@ -3,9 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Evento;
 use Illuminate\Http\Request;
 
-class ProductController extends Controller
+class EventoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,7 +15,11 @@ class ProductController extends Controller
      */
     public function index()
     {
-
+        $events = Evento::all();
+        return response()->json([
+            'status_code'=>200,
+            'dados' => $events
+        ]);
     }
 
     /**
@@ -35,7 +40,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-    
+        $event = Evento::create($request->all());
+        $event->save();
+        return response()->json([
+            'status_code'=>200,
+            'message' => 'Evento criado'
+        ]);
     }
 
     /**
@@ -46,6 +56,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
+        //
     }
 
     /**
@@ -56,7 +67,7 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        
+        //
     }
 
     /**
@@ -68,7 +79,9 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
+        $event = Evento::findOrFail($id);
+        $event->update($request->all());
+
     }
 
     /**
@@ -79,6 +92,11 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        //
+       Evento::findOrFail($id)->delete();
+        
+        return response()->json([
+            'status_code'=>200,
+            'message' => 'Evento deletado'
+        ]);
     }
 }

@@ -23,13 +23,14 @@ const store = new Vuex.Store(
    storeData
 )
 
-Vue.component('register-component', require('./components/RegisterComponent.vue').default);
-Vue.component('login-component', require('./components/LoginComponent.vue').default);
+Vue.component('register-component', require('./components/auth/RegisterComponent.vue').default);
+Vue.component('login-component', require('./components/auth/LoginComponent.vue').default);
 Vue.component('navbar', require('./components/NavBarComponent.vue').default);
 Vue.component('evento', require('./components/EventoComponent.vue').default);
 Vue.component('welcome', require('./components/WelcomeComponent.vue').default);
 Vue.component('app', require('./components/App.vue').default);
 Vue.component('notfound', require('./components/NotFoundComponent.vue').default);
+Vue.component('loading', require('./components/LoadingComponent.vue').default);
 
 
 const app = new Vue({

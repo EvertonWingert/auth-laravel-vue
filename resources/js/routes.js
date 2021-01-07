@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import Login from "./components/LoginComponent";
-import Register from "./components/RegisterComponent";
+import Login from "./components/auth/LoginComponent";
+import Register from "./components/auth/RegisterComponent";
 import Evento from "./components/EventoComponent";
 import Welcome from "./components/WelcomeComponent";
 import NotFound from "./components/NotFoundComponent";
