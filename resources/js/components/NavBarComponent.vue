@@ -18,24 +18,22 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div class="navbar-nav">
-            <div v-if="!$store.state.login">
-              <router-link to="/">
-                <a class="nav-link">Home</a>
-              </router-link>
-              <router-link v-show="!$store.state.login" to="/register"
-                ><a class="nav-link">Register</a></router-link
-              >
-              <router-link v-show="!$store.state.login" to="/login"
-                ><a class="nav-link">Login</a></router-link
-              >
-            </div>
-            <div v-else>
-              <router-link to="/evento">
-                <a class="nav-link">Evento</a>
-              </router-link>
-              <a class="nav-link" @click="logout">Logout</a>
-            </div>
+          <div v-if="!$store.state.login" class="navbar-nav">
+            <router-link to="/">
+              <a class="nav-link">Home</a>
+            </router-link>
+            <router-link v-show="!$store.state.login" to="/register"
+              ><a class="nav-link">Register</a></router-link
+            >
+            <router-link v-show="!$store.state.login" to="/login"
+              ><a class="nav-link">Login</a></router-link
+            >
+          </div>
+          <div class="navbar-nav" v-else>
+            <router-link to="/evento">
+              <a class="nav-link">Evento</a>
+            </router-link>
+            <a class="nav-link" @click="logout">Logout</a>
           </div>
         </div>
       </div>
@@ -47,8 +45,9 @@
 export default {
   methods: {
     logout() {
-      this.$store.dispatch("logoutUser");
-      this.$router.push("/home");
+      this.$store.commit("UPDATE_LOGIN", false);
+      $cookies.remove("token");
+      this.$router.push("/");
     },
   },
 };

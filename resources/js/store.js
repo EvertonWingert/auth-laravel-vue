@@ -4,6 +4,7 @@ export default {
     state: {
         login: false,
         table: [],
+        tableOrderCresc : false,
     },
     mutations: {
         UPDATE_LOGIN(state, payload) {
@@ -11,10 +12,15 @@ export default {
         },
         UPDATE_TABLE(state, payload){
             state.table = payload;
+        },
+        UPDATE_TABLE_ORDER(state, payload){
+            state.tableOrderCresc = payload;
         }
     },
     actions: {
-         async loginUser(context, payload) {
+         
+        /*
+        async loginUser(context, payload) {
             const response = await api.post("/login", payload);
             if (response.data['status_code'] == 200) {
                 context.commit("UPDATE_LOGIN", true);
@@ -31,23 +37,18 @@ export default {
             }
             return response;     
         },
-        logoutUser(context) {
+                logoutUser(context) {
             context.commit("UPDATE_LOGIN", false);
             $cookies.remove("token");
           
         },
+        */
+
         async saveTable(context, payload){
             console.log(payload);
             const response = await api.post("/evento", payload);
             return response;
 
-        },
-        async getTable(context){
-            const response = await api.get("/evento", );
-            if(response.data['status_code'] == 200){
-                context.commit("UPDATE_TABLE", response.data.dados);
-            }
-            return response;
         },
         async delTable(context, payload){
             const response = await api.delete(`/evento/${payload}`, );
@@ -56,7 +57,15 @@ export default {
         async updateTable(context, payload){
             const response = await api.put(`/evento/${payload.id}`, payload );
             return response;
-        }
+        },
+        async getTable(context){
+            const response = await api.get("/evento", );
+            if(response.data['status_code'] == 200){
+                context.commit("UPDATE_TABLE", this.state.tableOrderCresc ? response.data.dados :response.data.dados.reverse());
+            }
+            return response;
+        },
+
 
     }
 };

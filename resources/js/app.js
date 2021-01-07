@@ -30,7 +30,6 @@ Vue.component('evento', require('./components/EventoComponent.vue').default);
 Vue.component('welcome', require('./components/WelcomeComponent.vue').default);
 Vue.component('app', require('./components/App.vue').default);
 Vue.component('notfound', require('./components/NotFoundComponent.vue').default);
-Vue.component('loading', require('./components/LoadingComponent.vue').default);
 
 
 const app = new Vue({

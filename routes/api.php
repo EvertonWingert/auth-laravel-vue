@@ -11,11 +11,11 @@ use Illuminate\Support\Facades\Route;
 /* Auth */
 Route::post('login',[AuthController::class,'login']);
 Route::post('register',[AuthController::class,'register']);
-Route::resource('evento', EventoController::class);
 
 
 /* Rotas autenticadas */
 Route::middleware('auth:sanctum')->group(function(){
+    Route::resource('evento', EventoController::class);
     Route::post('logout',[AuthController::class,'logout']);
 });
 

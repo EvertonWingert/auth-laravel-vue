@@ -5,13 +5,15 @@ const axiosInstance = axios.create({
     headers: {
         "Content-Type": "application/json"
     }
+
+    
 });
 
 axiosInstance.interceptors.request.use(
     function(config){
         const token = $cookies.get("token");
         if(token){
-            config.headers.Authorization = `bearer ${token}`;
+            config.headers.Authorization = `Bearer ${token}`;
         }
         return config;
     },
@@ -19,6 +21,7 @@ axiosInstance.interceptors.request.use(
         return Promise.reject(error);
     }
 )
+
 
 export const api = {
     //Read

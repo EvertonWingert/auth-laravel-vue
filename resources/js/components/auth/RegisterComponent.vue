@@ -1,14 +1,10 @@
 <template>
   <div class="container">
-    <div v-if="loading" class="text-center">
-      <div class="spinner-border" role="status">
-        <span class="visually-hidden"></span>
-      </div>
-    </div>
+    <loading-component v-if="loading"></loading-component>
     <div class="card">
       <div class="card-header">Register</div>
       <div class="card-body">
-        <form>
+        <form @submit.prevent="register">
           <div class="mb-3 row">
             <label for="staticEmail" class="col-sm-2 col-form-label"
               >Name</label
@@ -67,7 +63,7 @@
             </div>
           </div>
           <button
-            @click.prevent="Register"
+
             type="submit"
             class="btn btn-primary"
           >
@@ -81,7 +77,11 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
+import LoadingComponent from "../LoadingComponent.vue";
+import { api } from "../../services";
+
 export default {
+  components: { LoadingComponent },
   data() {
     return {
       formData: {
@@ -90,6 +90,8 @@ export default {
         password: null,
       },
       loading: false,
+      response: [],
+      serverError: false,
     };
   },
   validations: {
@@ -100,20 +102,26 @@ export default {
     },
   },
   methods: {
-    Register() {
+    async register() {
       this.loading = true;
       if (!this.$v.$invalid) {
-        this.$store.dispatch("registerUser", this.formData).then((response) => {
-          if (response.data.status_code == 200) {
+        try {
+          this.response = await api.post("/register", this.formData);
+          if (this.response.data["status_code"] == 200) {
+            this.$store.commit("UPDATE_LOGIN", true);
+            $cookies.set("token", this.response.data.token);
             this.$router.push("/evento");
           } else {
-            console.log("Alguma coisa deu errada");
+            console.log("Erro");
           }
+        } catch (e) {
+          console.log(e);
+          console.log(this.response);
+        } finally {
           this.loading = false;
-        });
+        }
       } else {
         this.$v.$touch();
-        this.loading = false;
       }
     },
   },

@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <loading-component v-if="loading"></loading-component>
+
     <form>
       <div class="form-row">
         <div class="col">
@@ -10,7 +11,6 @@
             class="form-control"
             placeholder="Nome"
             :class="{ 'is-invalid': $v.formData.name.$error }"
-            @change="$v.formData.name.$touch()"
           />
           <div v-if="$v.formData.name.$error" class="invalid-feedback">
             Este campo é requerido.
@@ -18,12 +18,11 @@
         </div>
         <div class="col">
           <input
-            type="text"
+            type="date"
             v-model="formData.date"
             class="form-control"
             placeholder="Data"
             :class="{ 'is-invalid': $v.formData.date.$error }"
-            @change="$v.formData.date.$touch()"
           />
           <div v-if="$v.formData.date.$error" class="invalid-feedback">
             Este campo é requerido.
@@ -36,7 +35,6 @@
             class="form-control"
             placeholder="Desc"
             :class="{ 'is-invalid': $v.formData.desc.$error }"
-            @change="$v.formData.desc.$touch()"
           />
           <div v-if="$v.formData.desc.$error" class="invalid-feedback">
             Este campo é requerido.
@@ -51,10 +49,11 @@
           >
             Enviar
           </button>
+
           <button
             v-else
             @click.prevent="updateEvent()"
-            class="btn btn-warning btn-block"
+            class="btn btn-block btn-warning"
             v-bind:disabled="loading"
           >
             Salvar
@@ -62,7 +61,7 @@
         </div>
       </div>
     </form>
-    <div class="table-responsive">
+    <div class="table-responsive mt-5">
       <table class="table table-hover">
         <thead>
           <tr>
@@ -70,10 +69,15 @@
             <th scope="col">NOME</th>
             <th scope="col">DATA</th>
             <th scope="col">DESC</th>
+            <th scope="col">
+              <button class="btn btn-success" @click.prevent="inverter()">
+                Inverter
+              </button>
+            </th>
           </tr>
         </thead>
         <tbody v-for="data in $store.state.table" :key="data.id">
-          <tr>
+          <tr> 
             <th scope="row">{{ data.id }}</th>
             <td>{{ data.name }}</td>
             <td>{{ data.date }}</td>
@@ -110,7 +114,8 @@ export default {
         desc: null,
       },
       loading: false,
-      editar: false,
+      edit: false,
+      search: "",
     };
   },
   validations: {
@@ -127,16 +132,23 @@ export default {
         this.loading = false;
       });
     },
+
+    inverter() {
+      this.$store.commit(
+        "UPDATE_TABLE_ORDER",
+        !this.$store.state.tableOrderCresc
+      );
+      this.$store.commit("UPDATE_TABLE", this.$store.state.table.reverse());
+    },
     saveData() {
       if (!this.$v.$invalid) {
         this.$store.dispatch("saveTable", this.formData).then((response) => {
           this.getData();
-          this.limpaForm();
+          this.clearInputForm();
         });
       } else {
         this.$v.$touch();
       }
-      this.$v.$reset;
     },
     editEvent(data) {
       this.editar = true;
@@ -147,23 +159,23 @@ export default {
         this.$store.dispatch("updateTable", this.formData).then((response) => {
           this.getData();
           this.editar = false;
-          this.limpaForm();
+          this.clearInputForm();
         });
       } else {
         this.$v.$touch();
       }
-      this.$v.$reset;
     },
     delEvent(id) {
       this.$store.dispatch("delTable", id).then((response) => {
         this.getData();
       });
     },
-    limpaForm() {
+    clearInputForm() {
       this.formData.name = null;
       this.formData.name = null;
       this.formData.date = null;
       this.formData.desc = null;
+      this.$v.reset;
     },
   },
   mounted() {
