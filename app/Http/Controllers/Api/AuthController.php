@@ -58,9 +58,11 @@ class AuthController extends Controller
             'email' => 'required|email|unique:users','string','max:255',
             'password' => 'required','max:255',
         ]);
+
         if($validator->fails()){
             return response()->json(['status_code'=>400, 'message'=> 'Bad Request']);
         }
+        
         $user = new User();
         $user->name = $request->name;
         $user->email = $request->email;

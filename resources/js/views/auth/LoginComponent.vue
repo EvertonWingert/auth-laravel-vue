@@ -1,7 +1,6 @@
 <template>
-  <div class="container">
+  <div class="container d-flex justify-content-center align-content-center flex-column" style="height: 100vh">
     <loading-component v-if="loading"></loading-component>
-
     <div class="card">
       <div class="card-header">Login</div>
       <div class="card-body">
@@ -10,7 +9,7 @@
             <label for="staticEmail" class="col-sm-2 col-form-label"
               >Email</label
             >
-            <div class="col-sm-6">
+            <div class="col-6">
               <input
                 type="email"
                 class="form-control"
@@ -28,7 +27,7 @@
             <label for="inputPassword" class="col-sm-2 col-form-label"
               >Password</label
             >
-            <div class="col-sm-6">
+            <div class="col-6">
               <input
                 type="password"
                 class="form-control"
@@ -42,7 +41,7 @@
               </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary">Enviar</button>
+          <button type="submit" class="btn btn-primary btn-block">Enviar</button>
         </form>
       </div>
     </div>
@@ -50,7 +49,7 @@
 </template>
 
 <script>
-import LoadingComponent from "../LoadingComponent";
+import LoadingComponent from "../../components/LoadingComponent";
 import { required } from "vuelidate/lib/validators";
 import { api } from "../../services";
 

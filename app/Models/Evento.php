@@ -14,4 +14,5 @@ class Evento extends Model
         'date',
         'desc',
     ];
+
 }

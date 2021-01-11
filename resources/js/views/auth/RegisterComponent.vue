@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container d-flex justify-content-center align-content-center flex-column" style="height: 100vh">
     <loading-component v-if="loading"></loading-component>
-    <div class="card">
+    <div class="card ">
       <div class="card-header">Register</div>
       <div class="card-body">
         <form @submit.prevent="register">
@@ -65,7 +65,7 @@
           <button
 
             type="submit"
-            class="btn btn-primary"
+            class="btn btn-primary btn-block"
           >
             Enviar
           </button>
@@ -77,7 +77,7 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
-import LoadingComponent from "../LoadingComponent.vue";
+import LoadingComponent from "../../components/LoadingComponent";
 import { api } from "../../services";
 
 export default {
@@ -109,6 +109,7 @@ export default {
           this.response = await api.post("/register", this.formData);
           if (this.response.data["status_code"] == 200) {
             this.$store.commit("UPDATE_LOGIN", true);
+            console.log(this.response.data.token);
             $cookies.set("token", this.response.data.token);
             this.$router.push("/evento");
           } else {

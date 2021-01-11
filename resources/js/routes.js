@@ -1,10 +1,10 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-import Login from "./components/auth/LoginComponent";
-import Register from "./components/auth/RegisterComponent";
-import Evento from "./components/EventoComponent";
-import Welcome from "./components/WelcomeComponent";
+import Login from "./views/auth/LoginComponent";
+import Register from "./views/auth/RegisterComponent";
+import Evento from "./views/EventoComponent";
+import Welcome from "./views/WelcomeComponent";
 import NotFound from "./components/NotFoundComponent";
 
 Vue.use(VueRouter);

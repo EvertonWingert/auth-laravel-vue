@@ -3,8 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\EventRequest;
 use App\Models\Evento;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+
 
 class EventoController extends Controller
 {
@@ -17,7 +20,7 @@ class EventoController extends Controller
     {
         $events = Evento::all();
         return response()->json([
-            'status_code'=>200,
+            'status_code' => 200,
             'dados' => $events
         ]);
     }
@@ -29,21 +32,30 @@ class EventoController extends Controller
      */
     public function create()
     {
-        
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \App\Http\Requests\EventRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(EventRequest $request)
     {
-        $event = Evento::create($request->all());
+
+       
+        $request->validated();
+        $event = Evento::create([
+            'name' => $request['name'],
+            'date' => $request['date'],
+            'desc' => $request['desc'],
+        ]);
+
+
         $event->save();
+
         return response()->json([
-            'status_code'=>200,
+            'status_code' => 200,
             'message' => 'Evento criado'
         ]);
     }
@@ -73,15 +85,25 @@ class EventoController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \App\Http\Requests\EventRequest  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(EventRequest $request, $id)
     {
-        $event = Evento::findOrFail($id);
-        $event->update($request->all());
 
+        $request->validated();
+        $event = Evento::findOrFail($id);
+        $event->update([
+            'name' => $request['name'],
+            'date' => $request['date'],
+            'desc' => $request['desc'],
+        ]);
+
+        return response()->json([
+            'status_code' => 200,
+            'message' => 'Evento atualizado'
+        ]);
     }
 
     /**
@@ -92,10 +114,10 @@ class EventoController extends Controller
      */
     public function destroy($id)
     {
-       Evento::findOrFail($id)->delete();
-        
+        Evento::findOrFail($id)->delete();
+
         return response()->json([
-            'status_code'=>200,
+            'status_code' => 200,
             'message' => 'Evento deletado'
         ]);
     }

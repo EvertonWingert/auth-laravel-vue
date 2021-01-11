@@ -1,7 +1,12 @@
 <template>
   <div class="container">
     <loading-component v-if="loading"></loading-component>
-
+    <div v-if="serverError" class="alert alert-danger" role="alert">
+      <p>Não foi possivel conectar-se ao servidor</p>
+      <button type="button" class="btn btn-outline-danger" @click="getData()">
+        Tentar novamente
+      </button>
+    </div>
     <form>
       <div class="form-row">
         <div class="col">
@@ -22,6 +27,7 @@
             v-model="formData.date"
             class="form-control"
             placeholder="Data"
+            max="9999-12-31"
             :class="{ 'is-invalid': $v.formData.date.$error }"
           />
           <div v-if="$v.formData.date.$error" class="invalid-feedback">
@@ -33,7 +39,7 @@
             type="text"
             v-model="formData.desc"
             class="form-control"
-            placeholder="Desc"
+            placeholder="Descrição"
             :class="{ 'is-invalid': $v.formData.desc.$error }"
           />
           <div v-if="$v.formData.desc.$error" class="invalid-feedback">
@@ -42,7 +48,7 @@
         </div>
         <div class="col">
           <button
-            v-if="!editar"
+            v-if="!edit"
             @click.prevent="saveData()"
             class="btn btn-primary btn-block"
             v-bind:disabled="loading"
@@ -77,7 +83,7 @@
           </tr>
         </thead>
         <tbody v-for="data in $store.state.table" :key="data.id">
-          <tr> 
+          <tr>
             <th scope="row">{{ data.id }}</th>
             <td>{{ data.name }}</td>
             <td>{{ data.date }}</td>
@@ -102,6 +108,7 @@
 <script>
 import { required } from "vuelidate/lib/validators";
 import LoadingComponent from "./LoadingComponent.vue";
+import { api } from "../services";
 
 export default {
   components: { LoadingComponent },
@@ -113,9 +120,16 @@ export default {
         date: null,
         desc: null,
       },
+      message: {
+        type: "",
+        text: "",
+      },
       loading: false,
       edit: false,
       search: "",
+      response: [],
+      serverError: false,
+      responseErro: [],
     };
   },
   validations: {
@@ -126,41 +140,79 @@ export default {
     },
   },
   methods: {
-    getData() {
+    async getData() {
       this.loading = true;
-      this.$store.dispatch("getTable").then((response) => {
+      try {
+        this.response = await api.get("/evento");
+        if (this.response.data["status_code"] == 200) {
+          this.$store.commit(
+            "UPDATE_TABLE",
+            this.tableOrderCresc
+              ? this.response.data.dados
+              : this.response.data.dados.reverse()
+          );
+        } else {
+          console.log(this.response);
+        }
+        this.serverError = false;
+      } catch (e) {
+        console.log(e);
+        this.serverError = true;
+        //this.responseErro = this.response.data;
+      } finally {
         this.loading = false;
-      });
+        this.clearInputForm();
+      }
     },
 
     inverter() {
-      this.$store.commit(
-        "UPDATE_TABLE_ORDER",
-        !this.$store.state.tableOrderCresc
-      );
       this.$store.commit("UPDATE_TABLE", this.$store.state.table.reverse());
     },
-    saveData() {
+    async saveData() {
       if (!this.$v.$invalid) {
-        this.$store.dispatch("saveTable", this.formData).then((response) => {
-          this.getData();
-          this.clearInputForm();
-        });
+        try {
+          this.response = await api.post("/evento", this.formData);
+          if (this.response.data["status_code"] == 200) {
+            this.getData();
+          } else {
+            console.log(this.response);
+          }
+        } catch (e) {
+          console.log(e);
+          this.serverError = true;
+          this.responseErro = this.response.data;
+        }
       } else {
         this.$v.$touch();
       }
     },
     editEvent(data) {
-      this.editar = true;
+      this.edit = true;
       this.formData = data;
     },
-    updateEvent() {
+    flashMessage(type, text) {
+      this.message.type = type;
+      this.message.text = text;
+      setTimeout(() => (this.message = ""), 1000);
+    },
+    async updateEvent() {
       if (!this.$v.$invalid) {
-        this.$store.dispatch("updateTable", this.formData).then((response) => {
-          this.getData();
-          this.editar = false;
-          this.clearInputForm();
-        });
+        try {
+          this.response = await api.put(
+            `/evento/${this.formData.id}`,
+            this.formData
+          );
+          if (this.response.data["status_code"] == 200) {
+            this.getData();
+          } else {
+            console.log(this.response);
+          }
+        } catch (e) {
+          console.log(e);
+          this.serverError = true;
+        } finally {
+          this.edit = false;
+        }
       } else {
         this.$v.$touch();
       }
@@ -171,7 +223,6 @@ export default {
       });
     },
     clearInputForm() {
-      this.formData.name = null;
       this.formData.name = null;
       this.formData.date = null;
       this.formData.desc = null;
