@@ -7,7 +7,6 @@
 
 <script>
 export default {
-  
   methods: {
     validateLogin() {
       if ($cookies.get("token")) {

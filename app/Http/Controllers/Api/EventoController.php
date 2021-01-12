@@ -68,7 +68,12 @@ class EventoController extends Controller
      */
     public function show($id)
     {
-        //
+        $event = Evento::findOrFail($id);
+        return response()->json([
+            'status_code' => 200,
+            'dados' => $event
+        ]);
+
     }
 
     /**

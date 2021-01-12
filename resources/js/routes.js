@@ -6,7 +6,8 @@ import Register from "./views/auth/RegisterComponent";
 import Evento from "./views/EventoComponent";
 import Welcome from "./views/WelcomeComponent";
 import NotFound from "./components/NotFoundComponent";
-
+import CreateEvent from "./views/admin/CreateEventComponent";
+import EditEvent from "./views/admin/EditEventComponent";
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -44,6 +45,25 @@ const router = new VueRouter({
                 requiresAuth: true
             }
         },
+
+        {
+            path: "/evento/create",
+            name: "createEvent",
+            component: CreateEvent,
+            meta: {
+                requiresAuth: true
+            }
+        },
+        {
+            path: "/evento/edit/:id",
+            name: "editEvent",
+            component: EditEvent,
+            props: true,
+            meta: {
+                requiresAuth: true
+            }
+        },
+
         {
             path: "/:catchAll(.*)",
             name: "NotFound",

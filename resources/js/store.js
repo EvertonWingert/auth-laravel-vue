@@ -2,20 +2,22 @@ import { api } from "./services";
 
 export default {
     state: {
-        login: false,
         table: [],
-       
+        login: false,
+        isLoading: false
     },
     mutations: {
         UPDATE_LOGIN(state, payload) {
             state.login = payload;
         },
-        UPDATE_TABLE(state, payload){
+        UPDATE_TABLE(state, payload) {
             state.table = payload;
         },
+        UPDATE_LOADING(state, payload) {
+            state.isLoading = payload;
+        }
     },
     actions: {
-         
         /*
         async loginUser(context, payload) {
             const response = await api.post("/login", payload);
@@ -40,21 +42,43 @@ export default {
           
         },
         */
-        async saveTable(payload){
-            const response = await api.post("/evento", payload);
-            return response;
-
+        async readTable(context, payload) {
+            context.commit("UPDATE_LOADING", true);
+            await api.get("/evento", payload).then(response => {
+                context.commit("UPDATE_LOADING", false);
+                context.commit("UPDATE_TABLE", response.data.dados);
+            });
+            //return response;
         },
-        async delTable(payload){
-            const response = await api.delete(`/evento/${payload}`, );
+        async showTable(context, payload) {
+            context.commit("UPDATE_LOADING", true);
+            const response = await api.get("/evento/" + payload).then(response => {
+                context.commit("UPDATE_LOADING", false);
+                return response;
+            });
             return response;
         },
-        async updateTable(payload){
-            const response = await api.put(`/evento/${payload.id}`, payload );
-            return response;
+        async createTable(context, payload) {
+            context.commit("UPDATE_LOADING", true);
+            await api.post("/evento", payload).then(response => {
+                context.commit("UPDATE_LOADING", false);
+            });
         },
-        
 
+        async deleteTable(context, payload) {
+            context.commit("UPDATE_LOADING", true);
+            await api.delete(`/evento/${payload}`).then(response => {
+                context.commit("UPDATE_LOADING", false);
+            });
+        },
 
+        async updateTable(context, payload) {
+            context.commit("UPDATE_LOADING", true);
+            console.log(payload);
+            await api.put(`/evento/${payload.id}`, payload).then(response => {
+                context.commit("UPDATE_TABLE", response.data.dados);
+                context.commit("UPDATE_LOADING", false);
+            });
+        }
     }
 };
