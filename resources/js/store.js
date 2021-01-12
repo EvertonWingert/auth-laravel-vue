@@ -22,12 +22,71 @@ export default {
         }
     },
     actions: {
+        async createTable(context, payload) {
+            context.commit("UPDATE_LOADING", true);
+            await api
+                .post("/event", payload)
+                .catch(err => {
+                    context.commit("UPDATE_ERROR", err);
+                    console.log(err);
+                })
+                .finally(_ => {
+                    context.commit("UPDATE_LOADING", false);
+                });
+        },
         async readTable(context, payload) {
             context.commit("UPDATE_LOADING", true);
             await api
-                .get("/evento", payload)
+                .get("/event", payload)
                 .then(response => {
-                    context.commit("UPDATE_TABLE", response.data.dados);
+                    context.commit("UPDATE_TABLE", response.data.content);
+                    context.commit("UPDATE_ERROR", false);
+                })
+                .catch(err => {
+                    context.commit("UPDATE_ERROR", err);
+                    console.log(err);
+                })
+                .finally(_ => {
+                    context.commit("UPDATE_LOADING", false);
+                });
+        },
+        async showTable(context, payload) {
+            context.commit("UPDATE_LOADING", true);
+            const response = await api
+                .get("/event/" + payload)
+                .then(response => {
+                    context.commit("UPDATE_ERROR", false);
+
+                    return response;
+                })
+                .catch(err => {
+                    context.commit("UPDATE_ERROR", err);
+                    console.log(err);
+                })
+                .finally(_ => {
+                    context.commit("UPDATE_LOADING", false);
+                });
+            return response;
+        },
+        async deleteTable(context, payload) {
+            context.commit("UPDATE_LOADING", true);
+            await api
+                .delete(`/event/${payload}`)
+                .catch(err => {
+                    context.commit("UPDATE_ERROR", err);
+                    console.log(err);
+                })
+                .finally(_ => {
+                    context.commit("UPDATE_LOADING", false);
+                });
+        },
+        async updateTable(context, payload) {
+            context.commit("UPDATE_LOADING", true);
+            console.log(payload);
+            await api
+                .put(`/event/${payload.id}`, payload)
+                .then(response => {
+                    context.commit("UPDATE_TABLE", response.data.content);
                     context.commit("UPDATE_ERROR", false);
                 })
                 .catch(err => {
@@ -38,65 +97,6 @@ export default {
                     context.commit("UPDATE_LOADING", false);
                 });
         }
-    },
-    async showTable(context, payload) {
-        context.commit("UPDATE_LOADING", true);
-        const response = await api
-            .get("/evento/" + payload)
-            .then(response => {
-                context.commit("UPDATE_ERROR", false);
-
-                return response;
-            })
-            .catch(err => {
-                context.commit("UPDATE_ERROR", err);
-                console.log(err);
-            })
-            .finally(_ => {
-                context.commit("UPDATE_LOADING", false);
-            });
-        return response;
-    },
-    async createTable(context, payload) {
-        context.commit("UPDATE_LOADING", true);
-        await api
-            .post("/evento", payload)
-            .catch(err => {
-                context.commit("UPDATE_ERROR", err);
-                console.log(err);
-            })
-            .finally(_ => {
-                context.commit("UPDATE_LOADING", false);
-            });
-    },
-    async deleteTable(context, payload) {
-        context.commit("UPDATE_LOADING", true);
-        await api
-            .delete(`/evento/${payload}`)
-            .catch(err => {
-                context.commit("UPDATE_ERROR", err);
-                console.log(err);
-            })
-            .finally(_ => {
-                context.commit("UPDATE_LOADING", false);
-            });
-    },
-    async updateTable(context, payload) {
-        context.commit("UPDATE_LOADING", true);
-        console.log(payload);
-        await api
-            .put(`/evento/${payload.id}`, payload)
-            .then(response => {
-                context.commit("UPDATE_TABLE", response.data.dados);
-                context.commit("UPDATE_ERROR", false);
-            })
-            .catch(err => {
-                context.commit("UPDATE_ERROR", err);
-                console.log(err);
-            })
-            .finally(_ => {
-                context.commit("UPDATE_LOADING", false);
-            });
     }
     /*
         async loginUser(context, payload) {

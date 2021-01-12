@@ -1,7 +1,7 @@
 <template>
   <div class="container d-flex justify-content-center align-content-center flex-column" style="height: 100vh">
     <loading-component v-if="loading"></loading-component>
-    <div class="card ">
+    <div class="card rounded shadow">
       <div class="card-header">Register</div>
       <div class="card-body">
         <form @submit.prevent="register">

@@ -1,10 +1,10 @@
 
 <template>
   <header>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-      <div class="container-fluid">
+    <nav class="navbar navbar-expand-lg navbar-ligth bg-light shadow">
+      <div class="container">
         <router-link to="/"
-          ><a class="navbar-brand" href="#">Navbar</a></router-link
+          ><a class="navbar-brand text-reset" href="#">Navbar</a></router-link
         >
         <button
           class="navbar-toggler"
@@ -19,19 +19,25 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
           <div v-if="!$store.state.login" class="navbar-nav">
-            <router-link to="/">
+            <router-link class="text-reset" to="/">
               <a class="nav-link">Home</a>
             </router-link>
-            <router-link v-show="!$store.state.login" to="/register"
+            <router-link
+              class="text-reset"
+              v-show="!$store.state.login"
+              to="/register"
               ><a class="nav-link">Register</a></router-link
             >
-            <router-link v-show="!$store.state.login" to="/login"
+            <router-link
+              class="text-reset"
+              v-show="!$store.state.login"
+              to="/login"
               ><a class="nav-link">Login</a></router-link
             >
           </div>
           <div class="navbar-nav" v-else>
-            <router-link to="/evento">
-              <a class="nav-link">Evento</a>
+            <router-link  to="/evento">
+              <a class="nav-link text-reset">Evento</a>
             </router-link>
             <a class="nav-link" @click="logout">Logout</a>
           </div>

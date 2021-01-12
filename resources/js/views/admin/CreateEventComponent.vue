@@ -4,8 +4,6 @@
     style="height: 100vh"
   >
     <loading-component v-if="loading"></loading-component>
-    <h1 v-if="error">{{ this.error }}</h1>
-
     <div
       v-if="message.type"
       class="alert"
@@ -16,7 +14,7 @@
     >
       <p>{{ message.text }}</p>
     </div>
-    <div class="card">
+    <div class="card card rounded shadow p-3">
       <div class="card-body">
         <h5 class="card-title text-center">Create event</h5>
 
@@ -107,14 +105,18 @@ export default {
       return this.$store.state.isLoading;
     },
     error() {
-      this.$store.state.error;
+      return this.$store.state.error;
     },
   },
   methods: {
-    async saveData() {
+    saveData() {
       if (!this.$v.$invalid) {
-        console.log(this.formData);
-        this.$store.dispatch("createTable", this.formData);
+        this.$store.dispatch("createTable", this.formData).then((_) => {
+          this.flashMessage(
+            this.error ? "error" : "success",
+            this.error ? "Erro ao criar" : "Criado com sucesso"
+          );
+        });
       } else {
         this.$v.$touch();
       }

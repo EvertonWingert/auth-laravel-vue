@@ -15,7 +15,7 @@ Route::post('register',[AuthController::class,'register']);
 
 /* Rotas autenticadas */
 Route::middleware('auth:sanctum')->group(function(){
-    Route::resource('evento', EventoController::class);
+    Route::resource('event', EventoController::class);
     Route::post('logout',[AuthController::class,'logout']);
 });
 

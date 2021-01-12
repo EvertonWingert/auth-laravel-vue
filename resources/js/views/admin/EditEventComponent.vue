@@ -4,7 +4,7 @@
     style="height: 100vh"
   >
     <loading-component v-if="loading"></loading-component>
-    <h1 v-if="!error">{{ this.error }}</h1>
+    <h1 v-if="error">{{ this.error }}</h1>
 
     <div
       v-if="message.type"
@@ -16,7 +16,7 @@
     >
       <p>{{ message.text }}</p>
     </div>
-    <div class="card">
+    <div class="card card rounded shadow p-3">
       <div class="card-body">
         <h5 class="card-title text-center">Edit event</h5>
         <form>
@@ -94,7 +94,6 @@ export default {
         type: null,
         text: null,
       },
-      response: [],
     };
   },
   validations: {
@@ -119,19 +118,24 @@ export default {
     flashMessage(type, text) {
       this.message.type = type;
       this.message.text = text;
-      setTimeout(() => (this.message = ""), 3000);
+      setTimeout(() => (this.message = ""), 2000);
     },
     async updateEvent() {
       console.log(this.formData);
       if (!this.$v.$invalid) {
-        this.$store.dispatch("updateTable", this.formData);
+        this.$store.dispatch("updateTable", this.formData).then((_) => {
+          this.flashMessage(
+            this.error ? "error" : "success",
+            this.error ? "Erro ao atualiar" : "Atualizado com sucesso"
+          );
+        });
       } else {
         this.$v.$touch();
       }
     },
     fetchData() {
       this.$store.dispatch("showTable", this.id).then((response) => {
-        this.formData = response.data.dados;
+        this.formData = response.data.content;
       });
     },
   },

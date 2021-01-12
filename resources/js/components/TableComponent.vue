@@ -1,8 +1,11 @@
 <template>
   <div class="container">
     <loading-component v-if="loading"></loading-component>
-    <div class="table-responsive mt-5">
-      <h1 v-if="error != false">{{this.error}}</h1>
+    <div class="table-responsive mt-5 card rounded shadow p-3">
+      <h1 v-if="error != false">{{ this.error }}</h1>
+      <form class="row p-3 justify-content-center">
+        <input v-model="search" class="col-6 form-control" type="search" placeholder="Search" aria-label="Search">
+      </form>
       <table class="table table-hover">
         <thead>
           <tr>
@@ -10,16 +13,20 @@
             <th scope="col">NOME</th>
             <th scope="col">DATA</th>
             <th scope="col">DESCRIÇÃO</th>
+            <th scope="col">AÇÕES</th>
           </tr>
         </thead>
-        <tbody v-for="data in tableData" :key="data.id">
+        <tbody v-for="data in filteredList" :key="data.id">
           <tr>
             <th scope="row">{{ data.id }}</th>
             <td>{{ data.name }}</td>
             <td>{{ data.date }}</td>
             <td>{{ data.desc }}</td>
             <td>
-              <router-link :to="{ name: 'editEvent', params: { id: data.id } }">
+              <router-link
+                class="text-reset"
+                :to="{ name: 'editEvent', params: { id: data.id } }"
+              >
                 <i class="fas fa-edit"></i>
               </router-link>
             </td>
@@ -40,6 +47,11 @@ import LoadingComponent from "./LoadingComponent.vue";
 
 export default {
   components: { LoadingComponent },
+  data() {
+    return {
+      search: '',
+    }
+  },
   computed: {
     loading() {
       return this.$store.state.isLoading;
@@ -47,18 +59,23 @@ export default {
     tableData() {
       return this.$store.state.table;
     },
-    error(){
+    error() {
       return this.$store.state.error;
+    },
+    filteredList() {
+      return this.tableData.filter(data => {
+        return data.name.toLowerCase().includes(this.search.toLowerCase())
+      })
     }
   },
   methods: {
     fetchData() {
       this.$store.dispatch("readTable");
     },
-    async deleteEvent(id) {
-      this.$store.dispatch("deleteTable", id).then( response =>{
+    deleteEvent(id) {
+      this.$store.dispatch("deleteTable", id).then((response) => {
         this.fetchData();
-      })
+      });
     },
   },
   mounted() {
