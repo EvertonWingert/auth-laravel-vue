@@ -4,6 +4,8 @@
     style="height: 100vh"
   >
     <loading-component v-if="loading"></loading-component>
+    <h1 v-if="error">{{ this.error }}</h1>
+
     <div
       v-if="message.type"
       class="alert"
@@ -100,29 +102,18 @@ export default {
       desc: { required },
     },
   },
-  computed:{
-    loading(){
+  computed: {
+    loading() {
       return this.$store.state.isLoading;
+    },
+    error() {
+      this.$store.state.error;
     },
   },
   methods: {
     async saveData() {
       if (!this.$v.$invalid) {
-        /*
-        try {
-          this.response = await api.post("/evento", this.formData);
-          if (this.response.data["status_code"] == 200) {
-            //this.$router.push("/evento");
-            this.flashMessage("success", "Evento criado com sucesso");
-          } else {
-            this.flashMessage("warning", "Erro ao criar evento");
-            console.log(this.response);
-          }
-        } catch (e) {
-          this.flashMessage("danger", "Erro ao conectar com o servidor");
-          console.log(e);
-        }
-        */
+        console.log(this.formData);
         this.$store.dispatch("createTable", this.formData);
       } else {
         this.$v.$touch();

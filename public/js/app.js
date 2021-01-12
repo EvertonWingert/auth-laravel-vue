@@ -2105,11 +2105,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 
@@ -2117,47 +2112,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   components: {
     LoadingComponent: _LoadingComponent_vue__WEBPACK_IMPORTED_MODULE_3__["default"]
   },
-  data: function data() {
-    return {
-      search: "",
-      response: [],
-      serverError: false,
-      responseErro: []
-    };
-  },
   computed: {
     loading: function loading() {
       return this.$store.state.isLoading;
     },
     tableData: function tableData() {
       return this.$store.state.table;
+    },
+    error: function error() {
+      return this.$store.state.error;
     }
   },
   methods: {
     fetchData: function fetchData() {
       this.$store.dispatch("readTable");
     },
-
-    /*
-      this.loading = true;
-      try {
-        this.response = await api.get("/evento");
-        if (this.response.data["status_code"] == 200) {
-          this.$store.commit(
-            "UPDATE_TABLE",
-              this.response.data.dados
-          );
-        } else {
-          console.log(this.response);
-        }
-        this.serverError = false;
-      } catch (e) {
-        console.log(e);
-        this.serverError = true;
-      } finally {
-        this.loading = false;
-      }
-      */
     deleteEvent: function deleteEvent(id) {
       var _this = this;
 
@@ -2166,40 +2135,16 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                console.log(id);
-                _this.loading = true;
-                _context.prev = 2;
-                _context.next = 5;
-                return _services__WEBPACK_IMPORTED_MODULE_2__["api"]["delete"]("/evento/".concat(id));
+                _this.$store.dispatch("deleteTable", id).then(function (response) {
+                  _this.fetchData();
+                });
 
-              case 5:
-                _this.response = _context.sent;
-
-                if (_this.response.data["status_code"] == 200) {
-                  _this.getData();
-                } else {
-                  console.log(_this.response);
-                }
-
-                _context.next = 12;
-                break;
-
-              case 9:
-                _context.prev = 9;
-                _context.t0 = _context["catch"](2);
-                console.log(_context.t0);
-
-              case 12:
-                _context.prev = 12;
-                _this.loading = false;
-                return _context.finish(12);
-
-              case 15:
+              case 1:
               case "end":
                 return _context.stop();
             }
           }
-        }, _callee, null, [[2, 9, 12, 15]]);
+        }, _callee);
       }))();
     }
   },
@@ -2354,6 +2299,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 
@@ -2391,6 +2338,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   computed: {
     loading: function loading() {
       return this.$store.state.isLoading;
+    },
+    error: function error() {
+      this.$store.state.error;
     }
   },
   methods: {
@@ -2403,21 +2353,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context.prev = _context.next) {
               case 0:
                 if (!_this.$v.$invalid) {
-                  /*
-                  try {
-                    this.response = await api.post("/evento", this.formData);
-                    if (this.response.data["status_code"] == 200) {
-                      //this.$router.push("/evento");
-                      this.flashMessage("success", "Evento criado com sucesso");
-                    } else {
-                      this.flashMessage("warning", "Erro ao criar evento");
-                      console.log(this.response);
-                    }
-                  } catch (e) {
-                    this.flashMessage("danger", "Erro ao conectar com o servidor");
-                    console.log(e);
-                  }
-                  */
+                  console.log(_this.formData);
+
                   _this.$store.dispatch("createTable", _this.formData);
                 } else {
                   _this.$v.$touch();
@@ -2540,6 +2477,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
 
 
 
@@ -2582,6 +2521,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     tableData: function tableData() {
       return this.$store.state.table;
+    },
+    error: function error() {
+      return this.$store.state.error;
     }
   },
   methods: {
@@ -2606,23 +2548,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 if (!_this2.$v.$invalid) {
                   _this2.$store.dispatch("updateTable", _this2.formData);
-                  /*
-                  this.loading = true;
-                  try {
-                    this.response = await api.put(`/evento/${this.id}`, this.formData);
-                    if (this.response.data["status_code"] == 200) {
-                      this.flashMessage("success", "Evento editado com sucesso");
-                    } else {
-                      this.flashMessage("warning", "Erro ao editar evento");
-                    }
-                  } catch (e) {
-                    this.flashMessage("danger", "Não foi possivel conectar ao servidor");
-                      console.log(e);
-                  } finally {
-                    this.loading = false;
-                  }
-                  */
-
                 } else {
                   _this2.$v.$touch();
                 }
@@ -2642,24 +2567,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         _this3.formData = response.data.dados;
       });
     }
-    /*
-    async getData() {
-      this.loading = true;
-      try {
-        this.response = await api.get(`/evento/${this.id}`);
-        if (this.response.data["status_code"] == 200) {
-          this.formData = this.response.data.dados;
-        } else {
-          console.log(this.response);
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        this.loading = false;
-      }
-    },
-    */
-
   },
   mounted: function mounted() {
     console.log(this.id);
@@ -40409,31 +40316,9 @@ var render = function() {
     [
       _vm.loading ? _c("loading-component") : _vm._e(),
       _vm._v(" "),
-      _vm.serverError
-        ? _c(
-            "div",
-            { staticClass: "alert alert-danger", attrs: { role: "alert" } },
-            [
-              _c("p", [_vm._v("Não foi possivel conectar-se ao servidor")]),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn btn-outline-danger",
-                  attrs: { type: "button" },
-                  on: {
-                    click: function($event) {
-                      return _vm.getData()
-                    }
-                  }
-                },
-                [_vm._v("\n      Tentar novamente\n    ")]
-              )
-            ]
-          )
-        : _vm._e(),
-      _vm._v(" "),
       _c("div", { staticClass: "table-responsive mt-5" }, [
+        _vm.error != false ? _c("h1", [_vm._v(_vm._s(this.error))]) : _vm._e(),
+        _vm._v(" "),
         _c(
           "table",
           { staticClass: "table table-hover" },
@@ -40475,7 +40360,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          return _vm.editEvent(data.id)
+                          return _vm.deleteEvent(data.id)
                         }
                       }
                     })
@@ -40611,6 +40496,8 @@ var render = function() {
     },
     [
       _vm.loading ? _c("loading-component") : _vm._e(),
+      _vm._v(" "),
+      _vm.error ? _c("h1", [_vm._v(_vm._s(this.error))]) : _vm._e(),
       _vm._v(" "),
       _vm.message.type
         ? _c(
@@ -40792,6 +40679,8 @@ var render = function() {
     },
     [
       _vm.loading ? _c("loading-component") : _vm._e(),
+      _vm._v(" "),
+      !_vm.error ? _c("h1", [_vm._v(_vm._s(this.error))]) : _vm._e(),
       _vm._v(" "),
       _vm.message.type
         ? _c(
@@ -60396,7 +60285,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   state: {
     table: [],
     login: false,
-    isLoading: false
+    isLoading: false,
+    error: false
   },
   mutations: {
     UPDATE_LOGIN: function UPDATE_LOGIN(state, payload) {
@@ -60407,33 +60297,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     UPDATE_LOADING: function UPDATE_LOADING(state, payload) {
       state.isLoading = payload;
+    },
+    UPDATE_ERROR: function UPDATE_ERROR(state, payload) {
+      state.error = payload;
     }
   },
   actions: {
-    /*
-    async loginUser(context, payload) {
-        const response = await api.post("/login", payload);
-        if (response.data['status_code'] == 200) {
-            context.commit("UPDATE_LOGIN", true);
-            $cookies.set("token", response.data.token);
-        }
-        return response;
-       
-    },
-    async registerUser(context, payload){
-        const response = await api.post("/register", payload);
-        if (response.data['status_code'] == 200) {
-            context.commit("UPDATE_LOGIN", true);
-            $cookies.set("token", response.data.token);
-        }
-        return response;     
-    },
-            logoutUser(context) {
-        context.commit("UPDATE_LOGIN", false);
-        $cookies.remove("token");
-      
-    },
-    */
     readTable: function readTable(context, payload) {
       return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
@@ -60443,8 +60312,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 context.commit("UPDATE_LOADING", true);
                 _context.next = 3;
                 return _services__WEBPACK_IMPORTED_MODULE_1__["api"].get("/evento", payload).then(function (response) {
-                  context.commit("UPDATE_LOADING", false);
                   context.commit("UPDATE_TABLE", response.data.dados);
+                  context.commit("UPDATE_ERROR", false);
+                })["catch"](function (err) {
+                  context.commit("UPDATE_ERROR", err);
+                  console.log(err);
+                })["finally"](function (_) {
+                  context.commit("UPDATE_LOADING", false);
                 });
 
               case 3:
@@ -60454,96 +60328,137 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           }
         }, _callee);
       }))();
-    },
-    showTable: function showTable(context, payload) {
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
-        var response;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
-          while (1) {
-            switch (_context2.prev = _context2.next) {
-              case 0:
-                context.commit("UPDATE_LOADING", true);
-                _context2.next = 3;
-                return _services__WEBPACK_IMPORTED_MODULE_1__["api"].get("/evento/" + payload).then(function (response) {
-                  context.commit("UPDATE_LOADING", false);
-                  return response;
-                });
-
-              case 3:
-                response = _context2.sent;
-                return _context2.abrupt("return", response);
-
-              case 5:
-              case "end":
-                return _context2.stop();
-            }
-          }
-        }, _callee2);
-      }))();
-    },
-    createTable: function createTable(context, payload) {
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
-          while (1) {
-            switch (_context3.prev = _context3.next) {
-              case 0:
-                context.commit("UPDATE_LOADING", true);
-                _context3.next = 3;
-                return _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/evento", payload).then(function (response) {
-                  context.commit("UPDATE_LOADING", false);
-                });
-
-              case 3:
-              case "end":
-                return _context3.stop();
-            }
-          }
-        }, _callee3);
-      }))();
-    },
-    deleteTable: function deleteTable(context, payload) {
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
-          while (1) {
-            switch (_context4.prev = _context4.next) {
-              case 0:
-                context.commit("UPDATE_LOADING", true);
-                _context4.next = 3;
-                return _services__WEBPACK_IMPORTED_MODULE_1__["api"]["delete"]("/evento/".concat(payload)).then(function (response) {
-                  context.commit("UPDATE_LOADING", false);
-                });
-
-              case 3:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4);
-      }))();
-    },
-    updateTable: function updateTable(context, payload) {
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                context.commit("UPDATE_LOADING", true);
-                console.log(payload);
-                _context5.next = 4;
-                return _services__WEBPACK_IMPORTED_MODULE_1__["api"].put("/evento/".concat(payload.id), payload).then(function (response) {
-                  context.commit("UPDATE_TABLE", response.data.dados);
-                  context.commit("UPDATE_LOADING", false);
-                });
-
-              case 4:
-              case "end":
-                return _context5.stop();
-            }
-          }
-        }, _callee5);
-      }))();
     }
+  },
+  showTable: function showTable(context, payload) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+      var response;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              context.commit("UPDATE_LOADING", true);
+              _context2.next = 3;
+              return _services__WEBPACK_IMPORTED_MODULE_1__["api"].get("/evento/" + payload).then(function (response) {
+                context.commit("UPDATE_ERROR", false);
+                return response;
+              })["catch"](function (err) {
+                context.commit("UPDATE_ERROR", err);
+                console.log(err);
+              })["finally"](function (_) {
+                context.commit("UPDATE_LOADING", false);
+              });
+
+            case 3:
+              response = _context2.sent;
+              return _context2.abrupt("return", response);
+
+            case 5:
+            case "end":
+              return _context2.stop();
+          }
+        }
+      }, _callee2);
+    }))();
+  },
+  createTable: function createTable(context, payload) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              context.commit("UPDATE_LOADING", true);
+              _context3.next = 3;
+              return _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/evento", payload)["catch"](function (err) {
+                context.commit("UPDATE_ERROR", err);
+                console.log(err);
+              })["finally"](function (_) {
+                context.commit("UPDATE_LOADING", false);
+              });
+
+            case 3:
+            case "end":
+              return _context3.stop();
+          }
+        }
+      }, _callee3);
+    }))();
+  },
+  deleteTable: function deleteTable(context, payload) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
+        while (1) {
+          switch (_context4.prev = _context4.next) {
+            case 0:
+              context.commit("UPDATE_LOADING", true);
+              _context4.next = 3;
+              return _services__WEBPACK_IMPORTED_MODULE_1__["api"]["delete"]("/evento/".concat(payload))["catch"](function (err) {
+                context.commit("UPDATE_ERROR", err);
+                console.log(err);
+              })["finally"](function (_) {
+                context.commit("UPDATE_LOADING", false);
+              });
+
+            case 3:
+            case "end":
+              return _context4.stop();
+          }
+        }
+      }, _callee4);
+    }))();
+  },
+  updateTable: function updateTable(context, payload) {
+    return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5() {
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+        while (1) {
+          switch (_context5.prev = _context5.next) {
+            case 0:
+              context.commit("UPDATE_LOADING", true);
+              console.log(payload);
+              _context5.next = 4;
+              return _services__WEBPACK_IMPORTED_MODULE_1__["api"].put("/evento/".concat(payload.id), payload).then(function (response) {
+                context.commit("UPDATE_TABLE", response.data.dados);
+                context.commit("UPDATE_ERROR", false);
+              })["catch"](function (err) {
+                context.commit("UPDATE_ERROR", err);
+                console.log(err);
+              })["finally"](function (_) {
+                context.commit("UPDATE_LOADING", false);
+              });
+
+            case 4:
+            case "end":
+              return _context5.stop();
+          }
+        }
+      }, _callee5);
+    }))();
   }
+  /*
+      async loginUser(context, payload) {
+          const response = await api.post("/login", payload);
+          if (response.data['status_code'] == 200) {
+              context.commit("UPDATE_LOGIN", true);
+              $cookies.set("token", response.data.token);
+          }
+          return response;
+         
+      },
+      async registerUser(context, payload){
+          const response = await api.post("/register", payload);
+          if (response.data['status_code'] == 200) {
+              context.commit("UPDATE_LOGIN", true);
+              $cookies.set("token", response.data.token);
+          }
+          return response;     
+      },
+              logoutUser(context) {
+          context.commit("UPDATE_LOGIN", false);
+          $cookies.remove("token");
+        
+      },
+      */
+
 });
 
 /***/ }),

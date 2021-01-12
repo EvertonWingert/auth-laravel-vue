@@ -4,6 +4,8 @@
     style="height: 100vh"
   >
     <loading-component v-if="loading"></loading-component>
+    <h1 v-if="!error">{{ this.error }}</h1>
+
     <div
       v-if="message.type"
       class="alert"
@@ -109,6 +111,9 @@ export default {
     tableData() {
       return this.$store.state.table;
     },
+    error() {
+      return this.$store.state.error;
+    },
   },
   methods: {
     flashMessage(type, text) {
@@ -120,56 +125,20 @@ export default {
       console.log(this.formData);
       if (!this.$v.$invalid) {
         this.$store.dispatch("updateTable", this.formData);
-
-        /*
-        this.loading = true;
-        try {
-          this.response = await api.put(`/evento/${this.id}`, this.formData);
-          if (this.response.data["status_code"] == 200) {
-            this.flashMessage("success", "Evento editado com sucesso");
-          } else {
-            this.flashMessage("warning", "Erro ao editar evento");
-          }
-        } catch (e) {
-          this.flashMessage("danger", "Não foi possivel conectar ao servidor");
-
-          console.log(e);
-        } finally {
-          this.loading = false;
-        }
-        */
       } else {
         this.$v.$touch();
       }
     },
     fetchData() {
-      this.$store.dispatch("showTable", this.id).then(response =>{
+      this.$store.dispatch("showTable", this.id).then((response) => {
         this.formData = response.data.dados;
-      })
+      });
     },
-    /*
-    async getData() {
-      this.loading = true;
-      try {
-        this.response = await api.get(`/evento/${this.id}`);
-        if (this.response.data["status_code"] == 200) {
-          this.formData = this.response.data.dados;
-        } else {
-          console.log(this.response);
-        }
-      } catch (e) {
-        console.log(e);
-      } finally {
-        this.loading = false;
-      }
-    },
-    */
   },
 
   mounted() {
     console.log(this.id);
     this.fetchData();
-
   },
 };
 </script>
