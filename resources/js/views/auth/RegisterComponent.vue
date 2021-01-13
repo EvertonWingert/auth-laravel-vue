@@ -4,10 +4,16 @@
     style="height: 100vh"
   >
     <loading-component v-if="loading"></loading-component>
-    <flash-message-component
-      v-if="message.type"
-      :message="message"
-    ></flash-message-component>
+    <div v-if="error">
+      <div
+        v-for="(v, k) in error"
+        :key="k"
+        class="alert alert-danger"
+        role="alert"
+      >
+        <p>{{ v[0] }}</p>
+      </div>
+    </div>
 
     <div class="card rounded shadow">
       <div class="card-header">Register</div>
@@ -25,8 +31,8 @@
                 v-model="formData.name"
                 @change="$v.formData.name.$touch()"
                 id="inputName"
-                required
                 autocomplete="name"
+                required
               />
               <div v-if="$v.formData.name.$error" class="invalid-feedback">
                 Este campo é requerido.
@@ -45,8 +51,8 @@
                 v-model="formData.email"
                 @change="$v.formData.email.$touch()"
                 id="inputEmail"
-                required
                 autocomplete="email"
+                required
               />
               <div v-if="$v.formData.email.$error" class="invalid-feedback">
                 Este campo é requerido.
@@ -65,8 +71,8 @@
                 :class="{ 'is-invalid': $v.formData.password.$error }"
                 @change="$v.formData.password.$touch()"
                 id="inputPassword"
-                required
                 autocomplete="new-password"
+                required
               />
               <div v-if="$v.formData.password.$error" class="invalid-feedback">
                 Este campo é requerido.
@@ -83,7 +89,7 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
+import { required, minLength, email } from "vuelidate/lib/validators";
 import LoadingComponent from "../../components/LoadingComponent";
 import FlashMessageComponent from "../../components/FlashMessageComponent.vue";
 
@@ -98,52 +104,38 @@ export default {
         email: null,
         password: null,
       },
-      loading: false,
-      response: [],
-      message: {
-        type: "",
-        text: "",
-      },
     };
+  },
+  computed: {
+    loading() {
+      return this.$store.state.isLoading;
+    },
+    error() {
+      return this.$store.state.error;
+    },
   },
   validations: {
     formData: {
-      name: { required },
-      email: { required },
-      password: { required },
+      name: { required, minLength: minLength(3) },
+      email: { required, email },
+      password: { required, minLength: minLength(8) },
     },
   },
   methods: {
     register() {
-      this.loading = true;
       if (!this.$v.$invalid) {
-        api.get("/sanctum/csrf-cookie").then((_) => {
-          api
-            .post("/register", this.formData)
-            .then((resp) => {
-              this.$store.commit("UPDATE_LOGIN", true);
-              $cookies.set("token", resp.data.token);
-              this.$router.push("/evento");
-            })
-            .catch((err) => {
-              console.log(err.response.data.errors);
-            })
-            .finally((_) => {
-              this.loading = false;
-            });
+        this.$store.dispatch("registerUser", this.formData).then((_) => {
+          if (this.$store.state.login) {
+            this.$router.push({ name: "evento" });
+          }
         });
       } else {
         this.$v.$touch();
       }
     },
-    flashMessage(type, text) {
-      this.message.type = type;
-      this.message.text = text;
-      setTimeout(
-        () => ((this.message.type = ""), (this.message.text = "")),
-        3000
-      );
-    },
+  },
+  mounted() {
+    this.$store.commit("UPDATE_ERROR", null);
   },
 };
 </script>

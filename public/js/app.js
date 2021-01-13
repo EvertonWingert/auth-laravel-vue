@@ -2055,10 +2055,12 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     logout: function logout() {
-      this.$store.commit("UPDATE_LOGIN", false);
-      $cookies.remove("token");
-      this.$router.push({
-        name: "entrada"
+      var _this = this;
+
+      this.$store.dispatch("logoutUser").then(function (_) {
+        _this.$router.push({
+          name: "entrada"
+        });
       });
     }
   }
@@ -2140,6 +2142,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2149,7 +2157,8 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
-      search: ''
+      search: "",
+      loading: false
     };
   },
   computed: {
@@ -2159,10 +2168,13 @@ __webpack_require__.r(__webpack_exports__);
     error: function error() {
       return this.$store.state.error;
     },
+    table: function table() {
+      return this.$store.state.table;
+    },
     filteredList: function filteredList() {
       var _this = this;
 
-      return this.$store.state.table.filter(function (data) {
+      return this.table.filter(function (data) {
         return data.name.toLowerCase().includes(_this.search.toLowerCase());
       });
     }
@@ -2179,8 +2191,9 @@ __webpack_require__.r(__webpack_exports__);
       });
     }
   },
-  mounted: function mounted() {
+  created: function created() {
     this.fetchData();
+    this.$store.commit("UPDATE_ERROR", null);
   }
 });
 
@@ -2568,7 +2581,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   mounted: function mounted() {
-    console.log(this.id);
     this.fetchData();
   }
 });
@@ -2589,6 +2601,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__);
 /* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../services */ "./resources/js/services.js");
 /* harmony import */ var _components_FlashMessageComponent_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../components/FlashMessageComponent.vue */ "./resources/js/components/FlashMessageComponent.vue");
+//
+//
+//
 //
 //
 //
@@ -2676,10 +2691,12 @@ __webpack_require__.r(__webpack_exports__);
   validations: {
     formData: {
       email: {
-        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"]
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
+        email: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["email"]
       },
       password: {
-        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"]
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["required"],
+        minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_1__["minLength"])(8)
       }
     }
   },
@@ -2687,21 +2704,16 @@ __webpack_require__.r(__webpack_exports__);
     login: function login() {
       var _this = this;
 
-      this.loading = true;
-      _services__WEBPACK_IMPORTED_MODULE_2__["api"].get("/sanctum/csrf-cookie").then(function (_) {
-        _services__WEBPACK_IMPORTED_MODULE_2__["api"].post("/login", _this.formData).then(function (resp) {
-          _this.$store.commit("UPDATE_LOGIN", true);
-
-          $cookies.set("token", resp.data.token);
-
+      this.$store.dispatch("loginUser", this.formData).then(function (_) {
+        if (_this.$store.state.login) {
           _this.$router.push({
             name: "evento"
           });
-        })["catch"](function (err) {
-          console.log(err.response.data.errors);
-        })["finally"](function (_) {
-          _this.loading = false;
-        });
+        } else {
+          console.log(_this.$store.state.error.data.errors.email);
+
+          _this.flashMessage("danger", _this.$store.state.error.data.errors.email[0]);
+        }
       });
     },
     flashMessage: function flashMessage(type, text) {
@@ -2713,6 +2725,9 @@ __webpack_require__.r(__webpack_exports__);
         return _this2.message.type = "", _this2.message.text = "";
       }, 3000);
     }
+  },
+  mounted: function mounted() {
+    this.$store.commit("UPDATE_ERROR", null);
   }
 });
 
@@ -2816,6 +2831,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -2831,25 +2852,30 @@ __webpack_require__.r(__webpack_exports__);
         name: null,
         email: null,
         password: null
-      },
-      loading: false,
-      response: [],
-      message: {
-        type: "",
-        text: ""
       }
     };
+  },
+  computed: {
+    loading: function loading() {
+      return this.$store.state.isLoading;
+    },
+    error: function error() {
+      return this.$store.state.error;
+    }
   },
   validations: {
     formData: {
       name: {
-        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
+        minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(3)
       },
       email: {
-        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
+        email: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["email"]
       },
       password: {
-        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
+        minLength: Object(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["minLength"])(8)
       }
     }
   },
@@ -2857,35 +2883,21 @@ __webpack_require__.r(__webpack_exports__);
     register: function register() {
       var _this = this;
 
-      this.loading = true;
-
       if (!this.$v.$invalid) {
-        _services__WEBPACK_IMPORTED_MODULE_3__["api"].get("/sanctum/csrf-cookie").then(function (_) {
-          _services__WEBPACK_IMPORTED_MODULE_3__["api"].post("/register", _this.formData).then(function (resp) {
-            _this.$store.commit("UPDATE_LOGIN", true);
-
-            $cookies.set("token", resp.data.token);
-
-            _this.$router.push("/evento");
-          })["catch"](function (err) {
-            console.log(err.response.data.errors);
-          })["finally"](function (_) {
-            _this.loading = false;
-          });
+        this.$store.dispatch("registerUser", this.formData).then(function (_) {
+          if (_this.$store.state.login) {
+            _this.$router.push({
+              name: "evento"
+            });
+          }
         });
       } else {
         this.$v.$touch();
       }
-    },
-    flashMessage: function flashMessage(type, text) {
-      var _this2 = this;
-
-      this.message.type = type;
-      this.message.text = text;
-      setTimeout(function () {
-        return _this2.message.type = "", _this2.message.text = "";
-      }, 3000);
     }
+  },
+  mounted: function mounted() {
+    this.$store.commit("UPDATE_ERROR", null);
   }
 });
 
@@ -40946,7 +40958,8 @@ var render = function() {
                       attrs: {
                         type: "email",
                         id: "inputEmail",
-                        autocomplete: "email"
+                        autocomplete: "email",
+                        required: ""
                       },
                       domProps: { value: _vm.formData.email },
                       on: {
@@ -40997,7 +41010,8 @@ var render = function() {
                       attrs: {
                         type: "password",
                         id: "inputPassword",
-                        autocomplete: "password"
+                        autocomplete: "password",
+                        required: ""
                       },
                       domProps: { value: _vm.formData.password },
                       on: {
@@ -41076,8 +41090,22 @@ var render = function() {
     [
       _vm.loading ? _c("loading-component") : _vm._e(),
       _vm._v(" "),
-      _vm.message.type
-        ? _c("flash-message-component", { attrs: { message: _vm.message } })
+      _vm.error
+        ? _c(
+            "div",
+            _vm._l(_vm.error, function(v, k) {
+              return _c(
+                "div",
+                {
+                  key: k,
+                  staticClass: "alert alert-danger",
+                  attrs: { role: "alert" }
+                },
+                [_c("p", [_vm._v(_vm._s(v[0]))])]
+              )
+            }),
+            0
+          )
         : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "card rounded shadow" }, [
@@ -41120,8 +41148,8 @@ var render = function() {
                     attrs: {
                       type: "text",
                       id: "inputName",
-                      required: "",
-                      autocomplete: "name"
+                      autocomplete: "name",
+                      required: ""
                     },
                     domProps: { value: _vm.formData.name },
                     on: {
@@ -41172,8 +41200,8 @@ var render = function() {
                     attrs: {
                       type: "email",
                       id: "inputEmail",
-                      required: "",
-                      autocomplete: "email"
+                      autocomplete: "email",
+                      required: ""
                     },
                     domProps: { value: _vm.formData.email },
                     on: {
@@ -41224,8 +41252,8 @@ var render = function() {
                     attrs: {
                       type: "password",
                       id: "inputPassword",
-                      required: "",
-                      autocomplete: "new-password"
+                      autocomplete: "new-password",
+                      required: ""
                     },
                     domProps: { value: _vm.formData.password },
                     on: {
@@ -60412,14 +60440,22 @@ var api = {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./services */ "./resources/js/services.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./services */ "./resources/js/services.js");
+
+
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
+
+function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: {
     table: [],
     login: false,
     isLoading: false,
-    error: false
+    error: []
   },
   mutations: {
     UPDATE_LOGIN: function UPDATE_LOGIN(state, payload) {
@@ -60438,33 +60474,54 @@ __webpack_require__.r(__webpack_exports__);
   actions: {
     createTable: function createTable(context, payload) {
       context.commit("UPDATE_LOADING", true);
-      _services__WEBPACK_IMPORTED_MODULE_0__["api"].post("/event", payload)["catch"](function (err) {
+      _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/event", payload)["catch"](function (err) {
+        if (err.response) {
+          console.log("Erro de response: " + err.response);
+        } else if (err.request) {
+          console.log("Erro de request: " + err.request);
+        } else {
+          console.log("Error", err.message);
+        }
+
         context.commit("UPDATE_ERROR", err);
-        console.log(err);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
     },
     readTable: function readTable(context, payload) {
       context.commit("UPDATE_LOADING", true);
-      _services__WEBPACK_IMPORTED_MODULE_0__["api"].get("/event", payload).then(function (response) {
+      _services__WEBPACK_IMPORTED_MODULE_1__["api"].get("/event", payload).then(function (response) {
         context.commit("UPDATE_TABLE", response.data.content);
         context.commit("UPDATE_ERROR", false);
       })["catch"](function (err) {
+        if (err.response) {
+          console.log("Erro de response: " + err.response);
+        } else if (err.request) {
+          console.log("Erro de request: " + err.request);
+        } else {
+          console.log("Error", err.message);
+        }
+
         context.commit("UPDATE_ERROR", err);
-        console.log(err);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
     },
     showTable: function showTable(context, payload) {
       context.commit("UPDATE_LOADING", true);
-      var response = _services__WEBPACK_IMPORTED_MODULE_0__["api"].get("/event/" + payload).then(function (response) {
+      var response = _services__WEBPACK_IMPORTED_MODULE_1__["api"].get("/event/" + payload).then(function (response) {
         context.commit("UPDATE_ERROR", false);
         return response;
       })["catch"](function (err) {
+        if (err.response) {
+          console.log("Erro de response: " + err.response);
+        } else if (err.request) {
+          console.log("Erro de request: " + err.request);
+        } else {
+          console.log("Error", err.message);
+        }
+
         context.commit("UPDATE_ERROR", err);
-        console.log(err);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -60472,9 +60529,16 @@ __webpack_require__.r(__webpack_exports__);
     },
     deleteTable: function deleteTable(context, payload) {
       context.commit("UPDATE_LOADING", true);
-      _services__WEBPACK_IMPORTED_MODULE_0__["api"]["delete"]("/event/".concat(payload))["catch"](function (err) {
+      _services__WEBPACK_IMPORTED_MODULE_1__["api"]["delete"]("/event/".concat(payload))["catch"](function (err) {
+        if (err.response) {
+          console.log("Erro de response: " + err.response);
+        } else if (err.request) {
+          console.log("Erro de request: " + err.request);
+        } else {
+          console.log("Error", err.message);
+        }
+
         context.commit("UPDATE_ERROR", err);
-        console.log(err);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -60482,42 +60546,94 @@ __webpack_require__.r(__webpack_exports__);
     updateTable: function updateTable(context, payload) {
       context.commit("UPDATE_LOADING", true);
       console.log(payload);
-      _services__WEBPACK_IMPORTED_MODULE_0__["api"].put("/event/".concat(payload.id), payload).then(function (response) {
+      _services__WEBPACK_IMPORTED_MODULE_1__["api"].put("/event/".concat(payload.id), payload).then(function (response) {
         context.commit("UPDATE_TABLE", response.data.content);
         context.commit("UPDATE_ERROR", false);
       })["catch"](function (err) {
+        if (err.response) {
+          console.log("Erro de response: " + err.response);
+        } else if (err.request) {
+          console.log("Erro de request: " + err.request);
+        } else {
+          console.log("Error", err.message);
+        }
+
         context.commit("UPDATE_ERROR", err);
-        console.log(err);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
+    },
+    loginUser: function loginUser(context, payload) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                context.commit("UPDATE_LOADING", true);
+                _context.next = 3;
+                return _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/login", payload).then(function (resp) {
+                  context.commit("UPDATE_LOGIN", true);
+                  $cookies.set("token", resp.data.token);
+                })["catch"](function (err) {
+                  if (err.response) {
+                    //console.log("Erro de response: " + err.response);
+                    context.commit("UPDATE_ERROR", err.response);
+                  } else if (err.request) {
+                    //console.log("Erro de request: " + err.request);
+                    context.commit("UPDATE_ERROR", err.request);
+                  } else {
+                    //console.log("Error", err.message);
+                    context.commit("UPDATE_ERROR", err.message);
+                  }
+                })["finally"](function (_) {
+                  context.commit("UPDATE_LOADING", false);
+                });
+
+              case 3:
+              case "end":
+                return _context.stop();
+            }
+          }
+        }, _callee);
+      }))();
+    },
+    registerUser: function registerUser(context, payload) {
+      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                context.commit("UPDATE_LOADING", true);
+                _context2.next = 3;
+                return _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/register", payload).then(function (resp) {
+                  context.commit("UPDATE_LOGIN", true);
+                  $cookies.set("token", resp.data.token);
+                })["catch"](function (err) {
+                  if (err.response) {
+                    //console.log("Erro de response: " + err.response);
+                    context.commit("UPDATE_ERROR", err.response.data.errors);
+                  } else if (err.request) {
+                    context.commit("UPDATE_ERROR", err.request); //console.log("Erro de request: " + err.request);
+                  } else {
+                    context.commit("UPDATE_ERROR", err.message); //console.log("Error", err.message);
+                  }
+                })["finally"](function (_) {
+                  context.commit("UPDATE_LOADING", false);
+                });
+
+              case 3:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }))();
+    },
+    logoutUser: function logoutUser(context, _) {
+      context.commit("UPDATE_LOGIN", false);
+      $cookies.remove("token");
     }
   }
-  /*
-      async loginUser(context, payload) {
-          const response = await api.post("/login", payload);
-          if (response.data['status_code'] == 200) {
-              context.commit("UPDATE_LOGIN", true);
-              $cookies.set("token", response.data.token);
-          }
-          return response;
-         
-      },
-      async registerUser(context, payload){
-          const response = await api.post("/register", payload);
-          if (response.data['status_code'] == 200) {
-              context.commit("UPDATE_LOGIN", true);
-              $cookies.set("token", response.data.token);
-          }
-          return response;     
-      },
-              logoutUser(context) {
-          context.commit("UPDATE_LOGIN", false);
-          $cookies.remove("token");
-        
-      },
-      */
-
 });
 
 /***/ }),
@@ -60802,15 +60918,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!****************************************************!*\
   !*** ./resources/js/views/auth/LoginComponent.vue ***!
   \****************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _LoginComponent_vue_vue_type_template_id_ce3daf68___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LoginComponent.vue?vue&type=template&id=ce3daf68& */ "./resources/js/views/auth/LoginComponent.vue?vue&type=template&id=ce3daf68&");
 /* harmony import */ var _LoginComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LoginComponent.vue?vue&type=script&lang=js& */ "./resources/js/views/auth/LoginComponent.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _LoginComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _LoginComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -60840,7 +60955,7 @@ component.options.__file = "resources/js/views/auth/LoginComponent.vue"
 /*!*****************************************************************************!*\
   !*** ./resources/js/views/auth/LoginComponent.vue?vue&type=script&lang=js& ***!
   \*****************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -60872,15 +60987,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*******************************************************!*\
   !*** ./resources/js/views/auth/RegisterComponent.vue ***!
   \*******************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _RegisterComponent_vue_vue_type_template_id_19f66b12___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./RegisterComponent.vue?vue&type=template&id=19f66b12& */ "./resources/js/views/auth/RegisterComponent.vue?vue&type=template&id=19f66b12&");
 /* harmony import */ var _RegisterComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./RegisterComponent.vue?vue&type=script&lang=js& */ "./resources/js/views/auth/RegisterComponent.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _RegisterComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _RegisterComponent_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -60910,7 +61024,7 @@ component.options.__file = "resources/js/views/auth/RegisterComponent.vue"
 /*!********************************************************************************!*\
   !*** ./resources/js/views/auth/RegisterComponent.vue?vue&type=script&lang=js& ***!
   \********************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

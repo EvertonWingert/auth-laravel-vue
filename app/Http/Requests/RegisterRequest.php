@@ -24,7 +24,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'name' => 'required|min:3',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
         ];
@@ -32,10 +32,12 @@ class RegisterRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'name é requerido',
-            'email.required' => 'Nome é requerido',
-            'password.required' => 'Descrição é requerido',
-            'password.min:8' => 'password muito pequena',
+            'name.required' => 'Nome é requerido',
+            'email.required' => 'Email é requerido',
+            'email.email' => 'Digite um email valido',
+            'password.min' => 'A senha precisa ter pelo menos :min dígitos ',
+            'name.min' => 'O nome precisa ter pelo menos :min dígitos',
+            
         ];
     }
 }

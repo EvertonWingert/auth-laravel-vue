@@ -4,7 +4,13 @@
     <div class="table-responsive mt-5 card rounded shadow p-3">
       <h1 v-if="error != false">{{ this.error }}</h1>
       <form class="row p-3 justify-content-center">
-        <input v-model="search" class="col-6 form-control" type="search" placeholder="Search" aria-label="Search">
+        <input
+          v-model="search"
+          class="col-6 form-control"
+          type="search"
+          placeholder="Search"
+          aria-label="Search"
+        />
       </form>
       <table class="table table-hover">
         <thead>
@@ -49,8 +55,9 @@ export default {
   components: { LoadingComponent },
   data() {
     return {
-      search: '',
-    }
+      search: "",
+      loading: false,
+    };
   },
   computed: {
     loading() {
@@ -59,11 +66,14 @@ export default {
     error() {
       return this.$store.state.error;
     },
+    table(){
+      return this.$store.state.table;
+    }, 
     filteredList() {
-      return this.$store.state.table.filter(data => {
-        return data.name.toLowerCase().includes(this.search.toLowerCase())
+      return this.table.filter((data) => {
+        return data.name.toLowerCase().includes(this.search.toLowerCase());
       });
-    }
+    },
   },
   methods: {
     fetchData() {
@@ -75,8 +85,9 @@ export default {
       });
     },
   },
-  mounted() {
+  created() {
     this.fetchData();
+    this.$store.commit("UPDATE_ERROR", null);
   },
 };
 </script>

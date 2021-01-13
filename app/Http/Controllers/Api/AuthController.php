@@ -8,7 +8,8 @@ use App\Http\Requests\RegisterRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\ValidationException;
+
 
 class AuthController extends Controller
 {
@@ -25,11 +26,8 @@ class AuthController extends Controller
 
         $credentials = request(['email','password']);
 
-        if(Auth::attempt($credentials)){
-            return response()->json([
-                'status_code'=>400,
-                'message'=>'Credenciais incorretas',
-            ]);
+        if(!Auth::attempt($credentials)){
+            throw ValidationException::withMessages(['email' => 'Credenciais incorretas']);
         }
         
 

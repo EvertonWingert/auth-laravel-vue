@@ -54,9 +54,9 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.commit("UPDATE_LOGIN", false);
-      $cookies.remove("token");
-      this.$router.push({ name: "entrada" });
+      this.$store.dispatch("logoutUser").then((_) => {
+        this.$router.push({ name: "entrada" });
+      });
     },
   },
 };

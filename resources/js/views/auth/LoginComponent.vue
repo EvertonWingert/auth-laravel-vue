@@ -8,6 +8,7 @@
       v-if="message.type"
       :message="message"
     ></flash-message-component>
+
     <div class="card rounded shadow" style="max-with: 330px">
       <div class="card-header">Login</div>
       <div class="card-body">
@@ -25,6 +26,7 @@
                 :class="{ 'is-invalid': $v.formData.email.$error }"
                 @change="$v.formData.email.$touch()"
                 autocomplete="email"
+                required
               />
               <div v-if="$v.formData.email.$error" class="invalid-feedback">
                 Este campo é requerido.
@@ -44,6 +46,7 @@
                 :class="{ 'is-invalid': $v.formData.password.$error }"
                 @change="$v.formData.password.$touch()"
                 autocomplete="password"
+                required
               />
               <div v-if="$v.formData.password.$error" class="invalid-feedback">
                 Este campo é requerido.
@@ -61,7 +64,7 @@
 
 <script>
 import LoadingComponent from "../../components/LoadingComponent";
-import { required } from "vuelidate/lib/validators";
+import { required, minLength, email } from "vuelidate/lib/validators";
 import { api } from "../../services";
 import FlashMessageComponent from "../../components/FlashMessageComponent.vue";
 
@@ -87,28 +90,22 @@ export default {
 
   validations: {
     formData: {
-      email: { required },
-      password: { required },
+      email: { required, email },
+      password: { required, minLength: minLength(8) },
     },
   },
   methods: {
     login() {
-      this.loading = true;
-
-      api.get("/sanctum/csrf-cookie").then((_) => {
-        api
-          .post("/login", this.formData)
-          .then((resp) => {
-            this.$store.commit("UPDATE_LOGIN", true);
-            $cookies.set("token", resp.data.token);
-            this.$router.push({ name: "evento" });
-          })
-          .catch((err) => {
-            console.log(err.response.data.errors);
-          })
-          .finally((_) => {
-            this.loading = false;
-          });
+      this.$store.dispatch("loginUser", this.formData).then((_) => {
+        if (this.$store.state.login) {
+          this.$router.push({ name: "evento" });
+        } else {
+          console.log(this.$store.state.error.data.errors.email);
+          this.flashMessage(
+            "danger",
+            this.$store.state.error.data.errors.email[0]
+          );
+        }
       });
     },
     flashMessage(type, text) {
@@ -119,6 +116,9 @@ export default {
         3000
       );
     },
+  },
+  mounted() {
+    this.$store.commit("UPDATE_ERROR", null);
   },
 };
 </script>
