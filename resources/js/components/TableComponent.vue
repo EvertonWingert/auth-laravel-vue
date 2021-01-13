@@ -56,16 +56,13 @@ export default {
     loading() {
       return this.$store.state.isLoading;
     },
-    tableData() {
-      return this.$store.state.table;
-    },
     error() {
       return this.$store.state.error;
     },
     filteredList() {
-      return this.tableData.filter(data => {
+      return this.$store.state.table.filter(data => {
         return data.name.toLowerCase().includes(this.search.toLowerCase())
-      })
+      });
     }
   },
   methods: {

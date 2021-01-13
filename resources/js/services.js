@@ -5,9 +5,6 @@ const axiosInstance = axios.create({
     headers: {
         "Content-Type": "application/json"
     },
-    xsrfCookieName: 'XSRF-TOKEN',
-    xsrfHeaderName: 'X-XSRF-TOKEN'
-
 });
 
 axiosInstance.interceptors.request.use(
@@ -19,6 +16,7 @@ axiosInstance.interceptors.request.use(
         return config;
     },
     function (error){
+        console.log(error);
         return Promise.reject(error);
     }
 )

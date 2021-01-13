@@ -4,19 +4,10 @@
     style="height: 100vh"
   >
     <loading-component v-if="loading"></loading-component>
-    <h1 v-if="error">{{ this.error }}</h1>
-
-    <div
+    <flash-message-component
       v-if="message.type"
-      class="alert"
-      v-bind:class="[
-        message.type == 'success' ? 'alert-success' : 'alert-danger',
-      ]"
-      role="alert"
-    >
-      <p>{{ message.text }}</p>
-    </div>
-    <div class="card card rounded shadow p-3">
+      :message="message"
+    ></flash-message-component>    <div class="card card rounded shadow p-3">
       <div class="card-body">
         <h5 class="card-title text-center">Edit event</h5>
         <form>
@@ -78,9 +69,10 @@
 import { required } from "vuelidate/lib/validators";
 import { api } from "../../services";
 import LoadingComponent from "../../components/LoadingComponent.vue";
+import FlashMessageComponent from '../../components/FlashMessageComponent.vue';
 
 export default {
-  components: { LoadingComponent },
+  components: { LoadingComponent, FlashMessageComponent },
   props: ["id"],
   data() {
     return {

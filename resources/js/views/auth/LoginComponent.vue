@@ -1,7 +1,14 @@
 <template>
-  <div class="container d-flex justify-content-center align-content-center flex-column" style="height: 100vh">
+  <div
+    class="container d-flex justify-content-center align-content-center flex-column"
+    style="height: 100vh"
+  >
     <loading-component v-if="loading"></loading-component>
-    <div class="card rounded shadow ">
+    <flash-message-component
+      v-if="message.type"
+      :message="message"
+    ></flash-message-component>
+    <div class="card rounded shadow" style="max-with: 330px">
       <div class="card-header">Login</div>
       <div class="card-body">
         <form @submit.prevent="login">
@@ -17,6 +24,7 @@
                 id="inputEmail"
                 :class="{ 'is-invalid': $v.formData.email.$error }"
                 @change="$v.formData.email.$touch()"
+                autocomplete="email"
               />
               <div v-if="$v.formData.email.$error" class="invalid-feedback">
                 Este campo é requerido.
@@ -35,13 +43,16 @@
                 id="inputPassword"
                 :class="{ 'is-invalid': $v.formData.password.$error }"
                 @change="$v.formData.password.$touch()"
+                autocomplete="password"
               />
               <div v-if="$v.formData.password.$error" class="invalid-feedback">
                 Este campo é requerido.
               </div>
             </div>
           </div>
-          <button type="submit" class="btn btn-primary btn-block">Enviar</button>
+          <button type="submit" class="btn btn-primary btn-block">
+            Enviar
+          </button>
         </form>
       </div>
     </div>
@@ -52,10 +63,12 @@
 import LoadingComponent from "../../components/LoadingComponent";
 import { required } from "vuelidate/lib/validators";
 import { api } from "../../services";
+import FlashMessageComponent from "../../components/FlashMessageComponent.vue";
 
 export default {
   components: {
     LoadingComponent,
+    FlashMessageComponent,
   },
   data() {
     return {
@@ -65,9 +78,13 @@ export default {
       },
       response: [],
       loading: false,
-      serverError: false,
+      message: {
+        type: "",
+        text: "",
+      },
     };
   },
+
   validations: {
     formData: {
       email: { required },
@@ -75,25 +92,32 @@ export default {
     },
   },
   methods: {
-    async login() {
+    login() {
       this.loading = true;
-      try {
-        this.response = await api.post("/login", this.formData);
-        if (this.response.data["status_code"] == 200) {
-          this.$store.commit("UPDATE_LOGIN", true);
-          $cookies.set("token", this.response.data.token);
-          this.$router.push("/home");
-        } else {
-          console.log(this.response.data.message);
-          console.log("Erro");
-        }
-      } catch (e) {
-        console.log(e);
-        console.log(this.response);
-        this.serverError = true;
-      } finally {
-        this.loading = false;
-      }
+
+      api.get("/sanctum/csrf-cookie").then((_) => {
+        api
+          .post("/login", this.formData)
+          .then((resp) => {
+            this.$store.commit("UPDATE_LOGIN", true);
+            $cookies.set("token", resp.data.token);
+            this.$router.push({ name: "evento" });
+          })
+          .catch((err) => {
+            console.log(err.response.data.errors);
+          })
+          .finally((_) => {
+            this.loading = false;
+          });
+      });
+    },
+    flashMessage(type, text) {
+      this.message.type = type;
+      this.message.text = text;
+      setTimeout(
+        () => ((this.message.type = ""), (this.message.text = "")),
+        3000
+      );
     },
   },
 };
