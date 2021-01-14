@@ -1,23 +1,21 @@
 <template>
-  <div
-    class="container d-flex justify-content-center align-content-center flex-column"
-    style="height: 100vh"
-  >
-    <loading-component v-if="loading"></loading-component>
-    <flash-message-component
-      v-if="message.type"
-      :message="message"
-    ></flash-message-component>
+  <div class="d-flex align-items-center" style="height: 100vh">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-5 col-xl-4 my-5">
+          <h1 class="display-4 text-center mb-3">Login</h1>
+          <loading-component v-if="loading"></loading-component>
+          <flash-message-component
+            v-if="message.type"
+            :message="message"
+          ></flash-message-component>
+          <form @submit.prevent="login">
+            <!-- Email address -->
+            <div class="form-group">
+              <!-- Label -->
+              <label>Email Address</label>
 
-    <div class="card rounded shadow" style="max-with: 330px">
-      <div class="card-header">Login</div>
-      <div class="card-body">
-        <form @submit.prevent="login">
-          <div class="mb-3 row">
-            <label for="staticEmail" class="col-sm-2 col-form-label"
-              >Email</label
-            >
-            <div class="col-6">
+              <!-- Input -->
               <input
                 type="email"
                 class="form-control"
@@ -32,31 +30,56 @@
                 Este campo é requerido.
               </div>
             </div>
-          </div>
-          <div class="mb-3 row">
-            <label for="inputPassword" class="col-sm-2 col-form-label"
-              >Password</label
-            >
-            <div class="col-6">
-              <input
-                type="password"
-                class="form-control"
-                v-model="formData.password"
-                id="inputPassword"
-                :class="{ 'is-invalid': $v.formData.password.$error }"
-                @change="$v.formData.password.$touch()"
-                autocomplete="password"
-                required
-              />
-              <div v-if="$v.formData.password.$error" class="invalid-feedback">
-                Este campo é requerido.
+
+            <!-- Password -->
+            <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <!-- Label -->
+                  <label>Password</label>
+                </div>
+              </div>
+              <!-- / .row -->
+
+              <!-- Input group -->
+              <div class="input-group input-group-merge">
+                <!-- Input -->
+                <input
+                  type="password"
+                  class="form-control"
+                  v-model="formData.password"
+                  id="inputPassword"
+                  :class="{ 'is-invalid': $v.formData.password.$error }"
+                  @change="$v.formData.password.$touch()"
+                  autocomplete="password"
+                  required
+                />
+                <div
+                  v-if="$v.formData.password.$error"
+                  class="invalid-feedback"
+                >
+                  Este campo é requerido.
+                </div>
+
+                <!-- Icon -->
               </div>
             </div>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block">
-            Enviar
-          </button>
-        </form>
+
+            <!-- Submit -->
+            <button class="btn btn-lg btn-block btn-primary mb-3">
+              Sign in
+            </button>
+
+            <!-- Link -->
+            <div class="text-center">
+              <small class="text-muted text-center">
+                Não tem uma conta ainda? 
+                <router-link to="register"><a>Registrar</a>.</router-link>
+                
+              </small>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

@@ -1,8 +1,10 @@
 <template>
   <div class="container">
     <loading-component v-if="loading"></loading-component>
+    <div v-if="error != false" class="alert alert-danger mt-3" role="alert">
+      <p>{{ this.error }}</p>
+    </div>
     <div class="table-responsive mt-5 card rounded shadow p-3">
-      <h1 v-if="error != false">{{ this.error }}</h1>
       <form class="row p-3 justify-content-center">
         <input
           v-model="search"
@@ -56,7 +58,6 @@ export default {
   data() {
     return {
       search: "",
-      loading: false,
     };
   },
   computed: {
@@ -66,9 +67,9 @@ export default {
     error() {
       return this.$store.state.error;
     },
-    table(){
+    table() {
       return this.$store.state.table;
-    }, 
+    },
     filteredList() {
       return this.table.filter((data) => {
         return data.name.toLowerCase().includes(this.search.toLowerCase());

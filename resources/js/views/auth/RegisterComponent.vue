@@ -1,29 +1,27 @@
 <template>
-  <div
-    class="container d-flex justify-content-center align-content-center flex-column"
-    style="height: 100vh"
-  >
-    <loading-component v-if="loading"></loading-component>
-    <div v-if="error">
-      <div
-        v-for="(v, k) in error"
-        :key="k"
-        class="alert alert-danger"
-        role="alert"
-      >
-        <p>{{ v[0] }}</p>
-      </div>
-    </div>
-
-    <div class="card rounded shadow">
-      <div class="card-header">Register</div>
-      <div class="card-body">
-        <form @submit.prevent="register">
-          <div class="mb-3 row">
-            <label for="staticEmail" class="col-sm-2 col-form-label"
-              >Name</label
+  <div class="d-flex align-items-center" style="height: 100vh">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-5 col-xl-4 my-5">
+          <h1 class="display-4 text-center mb-3">Register</h1>
+          <loading-component v-if="loading"></loading-component>
+          <div v-if="error">
+            <div
+              v-for="(v, k) in error"
+              :key="k"
+              class="alert alert-danger"
+              role="alert"
             >
-            <div class="col-sm-6">
+              <p>{{ v[0] }}</p>
+            </div>
+          </div>
+          <form @submit.prevent="register">
+            <!-- Name -->
+            <div class="form-group">
+              <!-- Label -->
+              <label>Name</label>
+
+              <!-- Input -->
               <input
                 type="text"
                 class="form-control"
@@ -38,12 +36,12 @@
                 Este campo é requerido.
               </div>
             </div>
-          </div>
-          <div class="mb-3 row">
-            <label for="staticEmail" class="col-sm-2 col-form-label"
-              >Email</label
-            >
-            <div class="col-sm-6">
+            <!-- Email address -->
+            <div class="form-group">
+              <!-- Label -->
+              <label>Email Address</label>
+
+              <!-- Input -->
               <input
                 type="email"
                 class="form-control"
@@ -58,31 +56,53 @@
                 Este campo é requerido.
               </div>
             </div>
-          </div>
-          <div class="mb-3 row">
-            <label for="inputPassword" class="col-sm-2 col-form-label"
-              >Password</label
-            >
-            <div class="col-sm-6">
-              <input
-                type="password"
-                class="form-control"
-                v-model="formData.password"
-                :class="{ 'is-invalid': $v.formData.password.$error }"
-                @change="$v.formData.password.$touch()"
-                id="inputPassword"
-                autocomplete="new-password"
-                required
-              />
-              <div v-if="$v.formData.password.$error" class="invalid-feedback">
-                Este campo é requerido.
+
+            <!-- Password -->
+            <div class="form-group">
+              <div class="row">
+                <div class="col">
+                  <!-- Label -->
+                  <label>Password</label>
+                </div>
+              </div>
+              <!-- / .row -->
+
+              <!-- Input group -->
+              <div class="input-group input-group-merge">
+                <!-- Input -->
+                <input
+                  type="password"
+                  class="form-control"
+                  v-model="formData.password"
+                  :class="{ 'is-invalid': $v.formData.password.$error }"
+                  @change="$v.formData.password.$touch()"
+                  id="inputPassword"
+                  autocomplete="new-password"
+                  required
+                />
+                <div
+                  v-if="$v.formData.password.$error"
+                  class="invalid-feedback"
+                >
+                  Este campo é requerido.
+                </div>
               </div>
             </div>
-          </div>
-          <button type="submit" class="btn btn-primary btn-block">
-            Enviar
-          </button>
-        </form>
+
+            <!-- Submit -->
+            <button class="btn btn-lg btn-block btn-primary mb-3">
+              Registrar
+            </button>
+
+            <!-- Link -->
+            <div class="text-center">
+              <small class="text-muted text-center">
+                Já tem uma conta?
+                <router-link to="login"><a>Login</a>.</router-link>
+              </small>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
   </div>

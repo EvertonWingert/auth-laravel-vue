@@ -1,6 +1,22 @@
 
 <template>
-  <header>
+  <header v-if="isAuth">
+    <div 
+      class="c-sidebar c-sidebar-dark c-sidebar-fixed c-sidebar-lg-show"
+      id="sidebar"
+    >
+      <div class="c-sidebar-brand d-md-down-none"></div>
+      <ul class="c-sidebar-nav ps ps--active-y">
+        <li class="c-sidebar-nav-item">
+          <router-link to="/"
+            ><a class="c-sidebar-nav-link">Dashboard</a></router-link
+          >
+        </li>
+      </ul>
+
+      <a class="nav-link" v-if="isAuth" @click="logout">Logout</a>
+    </div>
+    <!--
     <nav class="navbar navbar-expand-lg navbar-ligth bg-light shadow">
       <div class="container">
         <router-link to="/"
@@ -18,7 +34,7 @@
           <span class="navbar-toggler-icon"></span>
         </button>
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-          <div v-if="!isConnected" class="navbar-nav">
+          <div v-if="!isAuth" class="navbar-nav">
             <router-link class="text-reset" to="/">
               <a class="nav-link">Home</a>
             </router-link>
@@ -29,26 +45,27 @@
             </router-link>
           </div>
         </div>
-        <div class="navbar-nav" v-if="isConnected">
-          <a class="nav-link" v-if="isConnected" @click="logout">Logout</a>
+        <div class="navbar-nav" v-if="isAuth">
+          <a class="nav-link" v-if="isAuth" @click="logout">Logout</a>
         </div>
         <div class="navbar-nav" v-else>
-          <router-link class="text-reset" v-show="!isConnected" to="/register"
+          <router-link class="text-reset" v-show="!isAuth" to="/register"
             ><a class="nav-link">Register</a></router-link
           >
-          <router-link class="text-reset" v-show="!isConnected" to="/login"
+          <router-link class="text-reset" v-show="!isAuth" to="/login"
             ><a class="nav-link">Login</a></router-link
           >
         </div>
       </div>
     </nav>
+    -->
   </header>
 </template>
 
 <script>
 export default {
   computed: {
-    isConnected() {
+    isAuth() {
       return this.$store.state.login;
     },
   },
