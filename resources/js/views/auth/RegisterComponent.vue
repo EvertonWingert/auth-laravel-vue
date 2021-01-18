@@ -3,8 +3,6 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-5 col-xl-4 my-5">
-          <h1 class="display-4 text-center mb-3">Register</h1>
-          <loading-component v-if="loading"></loading-component>
           <div v-if="error">
             <div
               v-for="(v, k) in error"
@@ -15,6 +13,9 @@
               <p>{{ v[0] }}</p>
             </div>
           </div>
+          <h1 class="text-center mb-3">Register</h1>
+          <loading-component v-if="loading"></loading-component>
+
           <form @submit.prevent="register">
             <!-- Name -->
             <div class="form-group">
@@ -98,7 +99,7 @@
             <div class="text-center">
               <small class="text-muted text-center">
                 Já tem uma conta?
-                <router-link to="login"><a>Login</a>.</router-link>
+                <router-link to="login"><a>Login</a></router-link>
               </small>
             </div>
           </form>

@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-5 col-xl-4 my-5">
-          <h1 class="display-4 text-center mb-3">Login</h1>
+          <h1 class=" text-center mb-3">Login</h1>
           <loading-component v-if="loading"></loading-component>
           <flash-message-component
             v-if="message.type"
@@ -123,11 +123,13 @@ export default {
         if (this.$store.state.login) {
           this.$router.push({ name: "evento" });
         } else {
-          console.log(this.$store.state.error.data.errors.email);
+          console.log(this.$store.state.error.data.errors.email[0]);
+          
           this.flashMessage(
             "danger",
             this.$store.state.error.data.errors.email[0]
           );
+          
         }
       });
     },

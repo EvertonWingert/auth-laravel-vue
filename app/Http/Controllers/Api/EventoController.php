@@ -20,7 +20,6 @@ class EventoController extends Controller
     {
         $events = Evento::all();
         return response()->json([
-            'status_code' => 200,
             'content' => $events
         ]);
     }
@@ -55,7 +54,6 @@ class EventoController extends Controller
         $event->save();
 
         return response()->json([
-            'status_code' => 200,
             'message' => 'Evento criado'
         ]);
     }
@@ -70,7 +68,6 @@ class EventoController extends Controller
     {
         $event = Evento::findOrFail($id);
         return response()->json([
-            'status_code' => 200,
             'content' => $event
         ]);
 

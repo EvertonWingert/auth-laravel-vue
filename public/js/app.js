@@ -1930,7 +1930,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   methods: {
     validateLogin: function validateLogin() {
-      if ($cookies.get("token")) {
+      if ($cookies.isKey("token")) {
         this.$store.commit("UPDATE_LOGIN", true);
       }
     }
@@ -2000,44 +2000,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 //
 //
 //
@@ -2255,6 +2217,11 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2751,7 +2718,7 @@ __webpack_require__.r(__webpack_exports__);
             name: "evento"
           });
         } else {
-          console.log(_this.$store.state.error.data.errors.email);
+          console.log(_this.$store.state.error.data.errors.email[0]);
 
           _this.flashMessage("danger", _this.$store.state.error.data.errors.email[0]);
         }
@@ -2788,6 +2755,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_LoadingComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/LoadingComponent */ "./resources/js/components/LoadingComponent.vue");
 /* harmony import */ var _components_FlashMessageComponent_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/FlashMessageComponent.vue */ "./resources/js/components/FlashMessageComponent.vue");
 /* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../../services */ "./resources/js/services.js");
+//
 //
 //
 //
@@ -40210,7 +40178,9 @@ var render = function() {
             attrs: { id: "sidebar" }
           },
           [
-            _c("div", { staticClass: "c-sidebar-brand d-md-down-none" }),
+            _c("div", { staticClass: "c-sidebar-brand d-md-down-none" }, [
+              _vm._v("Dashboard")
+            ]),
             _vm._v(" "),
             _c("ul", { staticClass: "c-sidebar-nav ps ps--active-y" }, [
               _c(
@@ -40224,15 +40194,26 @@ var render = function() {
                   ])
                 ],
                 1
+              ),
+              _vm._v(" "),
+              _c(
+                "li",
+                { staticClass: "c-sidebar-nav-item" },
+                [
+                  _c("router-link", { attrs: { to: "/" } }, [
+                    _c("a", { staticClass: "c-sidebar-nav-link" }, [
+                      _vm._v("Evento")
+                    ])
+                  ])
+                ],
+                1
               )
             ]),
             _vm._v(" "),
             _vm.isAuth
-              ? _c(
-                  "a",
-                  { staticClass: "nav-link", on: { click: _vm.logout } },
-                  [_vm._v("Logout")]
-                )
+              ? _c("a", { staticClass: "p-2", on: { click: _vm.logout } }, [
+                  _vm._v("Logout")
+                ])
               : _vm._e()
           ]
         )
@@ -40487,18 +40468,24 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c(
+    "div",
+    { staticClass: "container" },
+    [
+      _c("h1", { staticClass: "py-5" }, [_vm._v("Bem-vindo")]),
+      _vm._v(" "),
+      _c("router-link", { attrs: { to: "login" } }, [
+        _c("h4", [_vm._v("Login")])
+      ]),
+      _vm._v(" "),
+      _c("router-link", { attrs: { to: "register" } }, [
+        _c("h4", [_vm._v("Register")])
+      ])
+    ],
+    1
+  )
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "container" }, [
-      _c("h1", { staticClass: "py-5" }, [_vm._v("Bem-vindo")])
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -40875,9 +40862,7 @@ var render = function() {
             "div",
             { staticClass: "col-12 col-md-5 col-xl-4 my-5" },
             [
-              _c("h1", { staticClass: "display-4 text-center mb-3" }, [
-                _vm._v("Login")
-              ]),
+              _c("h1", { staticClass: " text-center mb-3" }, [_vm._v("Login")]),
               _vm._v(" "),
               _vm.loading ? _c("loading-component") : _vm._e(),
               _vm._v(" "),
@@ -41072,12 +41057,6 @@ var render = function() {
             "div",
             { staticClass: "col-12 col-md-5 col-xl-4 my-5" },
             [
-              _c("h1", { staticClass: "display-4 text-center mb-3" }, [
-                _vm._v("Register")
-              ]),
-              _vm._v(" "),
-              _vm.loading ? _c("loading-component") : _vm._e(),
-              _vm._v(" "),
               _vm.error
                 ? _c(
                     "div",
@@ -41095,6 +41074,12 @@ var render = function() {
                     0
                   )
                 : _vm._e(),
+              _vm._v(" "),
+              _c("h1", { staticClass: "text-center mb-3" }, [
+                _vm._v("Register")
+              ]),
+              _vm._v(" "),
+              _vm.loading ? _c("loading-component") : _vm._e(),
               _vm._v(" "),
               _c(
                 "form",
@@ -41263,8 +41248,7 @@ var render = function() {
                           "\n              Já tem uma conta?\n              "
                         ),
                         _c("router-link", { attrs: { to: "login" } }, [
-                          _c("a", [_vm._v("Login")]),
-                          _vm._v(".")
+                          _c("a", [_vm._v("Login")])
                         ])
                       ],
                       1
@@ -60266,6 +60250,28 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./resources/js/handleError.js":
+/*!*************************************!*\
+  !*** ./resources/js/handleError.js ***!
+  \*************************************/
+/*! exports provided: handleErrors */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "handleErrors", function() { return handleErrors; });
+function handleErrors(err) {
+  if (err.response) {
+    console.log("Erro de response: " + err.response);
+  } else if (err.request) {
+    console.log("Erro de request: " + err.request);
+  } else {
+    console.log("Error", err.message);
+  }
+}
+
+/***/ }),
+
 /***/ "./resources/js/routes.js":
 /*!********************************!*\
   !*** ./resources/js/routes.js ***!
@@ -60436,11 +60442,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
 /* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _services__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./services */ "./resources/js/services.js");
+/* harmony import */ var _handleError__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./handleError */ "./resources/js/handleError.js");
 
 
 function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
 
 function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -60468,15 +60476,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     createTable: function createTable(context, payload) {
       context.commit("UPDATE_LOADING", true);
       _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/event", payload)["catch"](function (err) {
-        if (err.response) {
-          console.log("Erro de response: " + err.response);
-        } else if (err.request) {
-          console.log("Erro de request: " + err.request);
-        } else {
-          console.log("Error", err.message);
-        }
-
-        context.commit("UPDATE_ERROR", err);
+        Object(_handleError__WEBPACK_IMPORTED_MODULE_2__["handleErrors"])(err);
+        context.commit("UPDATE_ERROR", err.response);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -60487,15 +60488,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         context.commit("UPDATE_TABLE", response.data.content);
         context.commit("UPDATE_ERROR", false);
       })["catch"](function (err) {
-        if (err.response) {
-          console.log("Erro de response: " + err.response);
-        } else if (err.request) {
-          console.log("Erro de request: " + err.request);
-        } else {
-          console.log("Error", err.message);
-        }
-
-        context.commit("UPDATE_ERROR", err);
+        Object(_handleError__WEBPACK_IMPORTED_MODULE_2__["handleErrors"])(err);
+        context.commit("UPDATE_ERROR", err.response);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -60506,15 +60500,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         context.commit("UPDATE_ERROR", false);
         return response;
       })["catch"](function (err) {
-        if (err.response) {
-          console.log("Erro de response: " + err.response);
-        } else if (err.request) {
-          console.log("Erro de request: " + err.request);
-        } else {
-          console.log("Error", err.message);
-        }
-
-        context.commit("UPDATE_ERROR", err);
+        Object(_handleError__WEBPACK_IMPORTED_MODULE_2__["handleErrors"])(err);
+        context.commit("UPDATE_ERROR", err.response);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -60523,15 +60510,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     deleteTable: function deleteTable(context, payload) {
       context.commit("UPDATE_LOADING", true);
       _services__WEBPACK_IMPORTED_MODULE_1__["api"]["delete"]("/event/".concat(payload))["catch"](function (err) {
-        if (err.response) {
-          console.log("Erro de response: " + err.response);
-        } else if (err.request) {
-          console.log("Erro de request: " + err.request);
-        } else {
-          console.log("Error", err.message);
-        }
-
-        context.commit("UPDATE_ERROR", err);
+        Object(_handleError__WEBPACK_IMPORTED_MODULE_2__["handleErrors"])(err);
+        context.commit("UPDATE_ERROR", err.response);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -60543,15 +60523,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         context.commit("UPDATE_TABLE", response.data.content);
         context.commit("UPDATE_ERROR", false);
       })["catch"](function (err) {
-        if (err.response) {
-          console.log("Erro de response: " + err.response);
-        } else if (err.request) {
-          console.log("Erro de request: " + err.request);
-        } else {
-          console.log("Error", err.message);
-        }
-
-        context.commit("UPDATE_ERROR", err);
+        Object(_handleError__WEBPACK_IMPORTED_MODULE_2__["handleErrors"])(err);
+        context.commit("UPDATE_ERROR", err.response);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -60568,16 +60541,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   context.commit("UPDATE_LOGIN", true);
                   $cookies.set("token", resp.data.token);
                 })["catch"](function (err) {
-                  if (err.response) {
-                    //console.log("Erro de response: " + err.response);
-                    context.commit("UPDATE_ERROR", err.response);
-                  } else if (err.request) {
-                    //console.log("Erro de request: " + err.request);
-                    context.commit("UPDATE_ERROR", err.request);
-                  } else {
-                    //console.log("Error", err.message);
-                    context.commit("UPDATE_ERROR", err.message);
-                  }
+                  context.commit("UPDATE_ERROR", err.response);
+                  Object(_handleError__WEBPACK_IMPORTED_MODULE_2__["handleErrors"])(err);
                 })["finally"](function (_) {
                   context.commit("UPDATE_LOADING", false);
                 });
@@ -60602,14 +60567,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   context.commit("UPDATE_LOGIN", true);
                   $cookies.set("token", resp.data.token);
                 })["catch"](function (err) {
-                  if (err.response) {
-                    //console.log("Erro de response: " + err.response);
-                    context.commit("UPDATE_ERROR", err.response.data.errors);
-                  } else if (err.request) {
-                    context.commit("UPDATE_ERROR", err.request); //console.log("Erro de request: " + err.request);
-                  } else {
-                    context.commit("UPDATE_ERROR", err.message); //console.log("Error", err.message);
-                  }
+                  Object(_handleError__WEBPACK_IMPORTED_MODULE_2__["handleErrors"])(err);
+                  context.commit("UPDATE_ERROR", err.response.data.errors);
                 })["finally"](function (_) {
                   context.commit("UPDATE_LOADING", false);
                 });

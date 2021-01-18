@@ -27,16 +27,13 @@ class AuthController extends Controller
         $credentials = request(['email','password']);
 
         if(!Auth::attempt($credentials)){
-            throw ValidationException::withMessages(['email' => 'Credenciais incorretas']);
+            return response()->json(['error'=>'Unauthorised'], 401);
         }
-        
-
 
         $user = User::where('email',$request->email)->first();
         $tokenResult = $user->createToken('authToken')->plainTextToken;
 
         return response()->json([
-            'status_code'=>200,
             'message'=>'Usuario logado',
             'token' => $tokenResult
         ]);
@@ -57,11 +54,8 @@ class AuthController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
         $tokenResult = $user->createToken('authToken')->plainTextToken;
-        return response()->json([
-            'status_code'=>200,
-            'message'=>'Usuario registrado',
-            'token' => $tokenResult
-        ]);
+        return response()->json(['success'=>$tokenResult]);
+
     }
     /**
      * Display a listing of the resource.
@@ -71,7 +65,6 @@ class AuthController extends Controller
     public function logout(Request $request){
         $request->user()->currentAcessToken()->delete();
         return response()->json([
-            'status_code' => 200,
             'message' => 'Token deletado'
         ]);
     }

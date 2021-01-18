@@ -9,7 +9,7 @@
 export default {
   methods: {
     validateLogin() {
-      if ($cookies.get("token")) {
+      if ($cookies.isKey("token")) {
         this.$store.commit("UPDATE_LOGIN", true);
       }
     },

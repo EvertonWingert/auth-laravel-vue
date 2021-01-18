@@ -1,4 +1,5 @@
 import { api } from "./services";
+import { handleErrors } from "./handleError";
 
 export default {
     state: {
@@ -26,14 +27,8 @@ export default {
             context.commit("UPDATE_LOADING", true);
             api.post("/event", payload)
                 .catch(err => {
-                    if (err.response) {
-                        console.log("Erro de response: " + err.response);
-                    } else if (err.request) {
-                        console.log("Erro de request: " + err.request);
-                    } else {
-                        console.log("Error", err.message);
-                    }
-                    context.commit("UPDATE_ERROR", err);
+                    handleErrors(err);
+                    context.commit("UPDATE_ERROR", err.response);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -47,14 +42,8 @@ export default {
                     context.commit("UPDATE_ERROR", false);
                 })
                 .catch(err => {
-                    if (err.response) {
-                        console.log("Erro de response: " + err.response);
-                    } else if (err.request) {
-                        console.log("Erro de request: " + err.request);
-                    } else {
-                        console.log("Error", err.message);
-                    }
-                    context.commit("UPDATE_ERROR", err);
+                    handleErrors(err);
+                    context.commit("UPDATE_ERROR", err.response);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -70,14 +59,8 @@ export default {
                     return response;
                 })
                 .catch(err => {
-                    if (err.response) {
-                        console.log("Erro de response: " + err.response);
-                    } else if (err.request) {
-                        console.log("Erro de request: " + err.request);
-                    } else {
-                        console.log("Error", err.message);
-                    }
-                    context.commit("UPDATE_ERROR", err);
+                    handleErrors(err);
+                    context.commit("UPDATE_ERROR", err.response);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -88,14 +71,8 @@ export default {
             context.commit("UPDATE_LOADING", true);
             api.delete(`/event/${payload}`)
                 .catch(err => {
-                    if (err.response) {
-                        console.log("Erro de response: " + err.response);
-                    } else if (err.request) {
-                        console.log("Erro de request: " + err.request);
-                    } else {
-                        console.log("Error", err.message);
-                    }
-                    context.commit("UPDATE_ERROR", err);
+                    handleErrors(err);
+                    context.commit("UPDATE_ERROR", err.response);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -110,14 +87,8 @@ export default {
                     context.commit("UPDATE_ERROR", false);
                 })
                 .catch(err => {
-                    if (err.response) {
-                        console.log("Erro de response: " + err.response);
-                    } else if (err.request) {
-                        console.log("Erro de request: " + err.request);
-                    } else {
-                        console.log("Error", err.message);
-                    }
-                    context.commit("UPDATE_ERROR", err);
+                    handleErrors(err);
+                    context.commit("UPDATE_ERROR", err.response);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -125,6 +96,7 @@ export default {
         },
         async loginUser(context, payload) {
             context.commit("UPDATE_LOADING", true);
+
             await api
                 .post("/login", payload)
                 .then(resp => {
@@ -132,16 +104,8 @@ export default {
                     $cookies.set("token", resp.data.token);
                 })
                 .catch(err => {
-                    if (err.response) {
-                        //console.log("Erro de response: " + err.response);
-                        context.commit("UPDATE_ERROR", err.response);
-                    } else if (err.request) {
-                        //console.log("Erro de request: " + err.request);
-                        context.commit("UPDATE_ERROR", err.request);
-                    } else {
-                        //console.log("Error", err.message);
-                        context.commit("UPDATE_ERROR", err.message);
-                    }
+                    context.commit("UPDATE_ERROR", err.response);
+                    handleErrors(err);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -149,22 +113,15 @@ export default {
         },
         async registerUser(context, payload) {
             context.commit("UPDATE_LOADING", true);
-            await api.post("/register", payload)
+            await api
+                .post("/register", payload)
                 .then(resp => {
                     context.commit("UPDATE_LOGIN", true);
                     $cookies.set("token", resp.data.token);
                 })
                 .catch(err => {
-                    if (err.response) {
-                        //console.log("Erro de response: " + err.response);
-                        context.commit("UPDATE_ERROR", err.response.data.errors);
-                    } else if (err.request) {
-                        context.commit("UPDATE_ERROR", err.request);
-                        //console.log("Erro de request: " + err.request);
-                    } else {
-                        context.commit("UPDATE_ERROR", err.message);
-                        //console.log("Error", err.message);
-                    }
+                    handleErrors(err);
+                    context.commit("UPDATE_ERROR", err.response.data.errors);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
