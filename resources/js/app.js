@@ -14,6 +14,7 @@ import VueCookies from 'vue-cookies';
 import Vuelidate from 'vuelidate';
 
 
+
 Vue.use(Vuex);
 Vue.use(VueCookies);
 Vue.use(Vuelidate);
@@ -27,7 +28,6 @@ Vue.component('register-component', require('./views/auth/RegisterComponent.vue'
 Vue.component('login-component', require('./views/auth/LoginComponent.vue').default);
 Vue.component('navbar', require('./components/NavBarComponent.vue').default);
 Vue.component('evento', require('./views/EventoComponent.vue').default);
-Vue.component('welcome', require('./views/WelcomeComponent.vue').default);
 Vue.component('app', require('./App.vue').default);
 Vue.component('notfound', require('./components/NotFoundComponent.vue').default);
 

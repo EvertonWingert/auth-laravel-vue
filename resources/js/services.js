@@ -19,6 +19,15 @@ axiosInstance.interceptors.request.use(
         return Promise.reject(error);
     }
 );
+axios.interceptors.response.use(null, (error) => {
+    if (error.response.status == 401 ) {
+        console.log('sem autorização')
+      store.commit('logout')
+      router.push('/login')
+    }
+
+    return Promise.reject(error)
+});
 
 export const api = {
     //Read

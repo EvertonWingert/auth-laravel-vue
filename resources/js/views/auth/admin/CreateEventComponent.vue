@@ -1,15 +1,8 @@
 <template>
-  <div
-    class="container d-flex justify-content-center align-content-center flex-column"
-    style="height: 100vh"
-  >
-    <loading-component v-if="loading"></loading-component>
-    <flash-message-component
-      v-if="message.type"
-      :message="message"
-    ></flash-message-component>    <div class="card card rounded shadow p-3">
+  <div class="container">
+    <div class="card card rounded shadow">
       <div class="card-body">
-        <h5 class="card-title text-center">Edit event</h5>
+        <h5 class="card-title">Create event</h5>
         <form>
           <div class="form">
             <div class="col-auto mb-3">
@@ -18,10 +11,15 @@
                 v-model="formData.name"
                 class="form-control"
                 placeholder="Nome"
-                :class="{ 'is-invalid': $v.formData.name.$error }"
+                :class="{ 'is-invalid': error || $v.formData.name.$error }"
               />
               <div v-if="$v.formData.name.$error" class="invalid-feedback">
                 Este campo é requerido.
+              </div>
+              <div v-if="error && error.name" class="invalid-feedback">
+                <div v-for="(v, k) in error" :key="k" role="alert">
+                  <p>{{ v[0] }}</p>
+                </div>
               </div>
             </div>
             <div class="col-auto mb-3">
@@ -31,10 +29,15 @@
                 class="form-control"
                 placeholder="Data"
                 max="9999-12-31"
-                :class="{ 'is-invalid': $v.formData.date.$error }"
+                :class="{ 'is-invalid': error || $v.formData.date.$error }"
               />
               <div v-if="$v.formData.date.$error" class="invalid-feedback">
                 Este campo é requerido.
+              </div>
+              <div v-if="error && error.date" class="invalid-feedback">
+                <div v-for="(v, k) in error" :key="k" role="alert">
+                  <p>{{ v[0] }}</p>
+                </div>
               </div>
             </div>
             <div class="col-auto mb-3">
@@ -43,19 +46,24 @@
                 v-model="formData.desc"
                 class="form-control"
                 placeholder="Descrição"
-                :class="{ 'is-invalid': $v.formData.desc.$error }"
+                :class="{ 'is-invalid': error || $v.formData.desc.$error }"
               />
               <div v-if="$v.formData.desc.$error" class="invalid-feedback">
                 Este campo é requerido.
               </div>
+              <div v-if="error && error.desc" class="invalid-feedback">
+                <div v-for="(v, k) in error" :key="k" role="alert">
+                  <p>{{ v[0] }}</p>
+                </div>
+              </div>
             </div>
             <div class="col-auto mb-3">
               <button
-                @click.prevent="updateEvent()"
-                class="btn btn-warning"
+                @click.prevent="saveData()"
+                class="btn btn-primary"
                 v-bind:disabled="loading"
               >
-                Salvar
+                Enviar
               </button>
             </div>
           </div>
@@ -67,13 +75,9 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
-import { api } from "../../services";
-import LoadingComponent from "../../components/LoadingComponent.vue";
-import FlashMessageComponent from '../../components/FlashMessageComponent.vue';
+import Swal from "sweetalert2";
 
 export default {
-  components: { LoadingComponent, FlashMessageComponent },
-  props: ["id"],
   data() {
     return {
       formData: {
@@ -83,8 +87,8 @@ export default {
         desc: null,
       },
       message: {
-        type: null,
-        text: null,
+        type: "",
+        text: "",
       },
     };
   },
@@ -99,41 +103,28 @@ export default {
     loading() {
       return this.$store.state.isLoading;
     },
-    tableData() {
-      return this.$store.state.table;
-    },
     error() {
       return this.$store.state.error;
     },
   },
   methods: {
-    flashMessage(type, text) {
-      this.message.type = type;
-      this.message.text = text;
-      setTimeout(() => (this.message = ""), 2000);
-    },
-    async updateEvent() {
-      console.log(this.formData);
+    saveData() {
       if (!this.$v.$invalid) {
-        this.$store.dispatch("updateTable", this.formData).then((_) => {
-          this.flashMessage(
-            this.error ? "error" : "success",
-            this.error ? "Erro ao atualiar" : "Atualizado com sucesso"
-          );
+        this.$store.dispatch("createTable", this.formData).then((_) => {
+          this.error
+            ? Swal.fire("Oops...", this.$store.state.error, "error")
+            : Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Your work has been saved",
+                showConfirmButton: false,
+                timer: 1500,
+              });
         });
       } else {
         this.$v.$touch();
       }
     },
-    fetchData() {
-      this.$store.dispatch("showTable", this.id).then((response) => {
-        this.formData = response.data.content;
-      });
-    },
-  },
-
-  mounted() {
-    this.fetchData();
   },
 };
 </script>

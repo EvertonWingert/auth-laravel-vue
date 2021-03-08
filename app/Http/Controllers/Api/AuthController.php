@@ -27,7 +27,7 @@ class AuthController extends Controller
         $credentials = request(['email','password']);
 
         if(!Auth::attempt($credentials)){
-            return response()->json(['error'=>'Unauthorised'], 401);
+            return response()->json(['error'=>'Credenciais incorretas'], 401);
         }
 
         $user = User::where('email',$request->email)->first();
@@ -54,7 +54,7 @@ class AuthController extends Controller
         $user->password = bcrypt($request->password);
         $user->save();
         $tokenResult = $user->createToken('authToken')->plainTextToken;
-        return response()->json(['success'=>$tokenResult]);
+        return response()->json(['token'=>$tokenResult]);
 
     }
     /**

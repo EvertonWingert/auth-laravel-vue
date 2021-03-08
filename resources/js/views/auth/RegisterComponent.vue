@@ -3,18 +3,7 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-5 col-xl-4 my-5">
-          <div v-if="error">
-            <div
-              v-for="(v, k) in error"
-              :key="k"
-              class="alert alert-danger"
-              role="alert"
-            >
-              <p>{{ v[0] }}</p>
-            </div>
-          </div>
           <h1 class="text-center mb-3">Register</h1>
-          <loading-component v-if="loading"></loading-component>
 
           <form @submit.prevent="register">
             <!-- Name -->
@@ -26,7 +15,7 @@
               <input
                 type="text"
                 class="form-control"
-                :class="{ 'is-invalid': $v.formData.name.$error }"
+                :class="{ 'is-invalid': error || $v.formData.name.$error }"
                 v-model="formData.name"
                 @change="$v.formData.name.$touch()"
                 id="inputName"
@@ -36,6 +25,11 @@
               <div v-if="$v.formData.name.$error" class="invalid-feedback">
                 Este campo é requerido.
               </div>
+              <div v-if="error" class="invalid-feedback">
+                <div v-for="(v, k) in error.name" :key="k" role="alert">
+                  <p>{{ v[0] }}</p>
+                </div>
+              </div>
             </div>
             <!-- Email address -->
             <div class="form-group">
@@ -44,9 +38,10 @@
 
               <!-- Input -->
               <input
-                type="email"
                 class="form-control"
-                :class="{ 'is-invalid': $v.formData.email.$error }"
+                :class="{
+                  'is-invalid': error || $v.formData.email.$error,
+                }"
                 v-model="formData.email"
                 @change="$v.formData.email.$touch()"
                 id="inputEmail"
@@ -55,6 +50,11 @@
               />
               <div v-if="$v.formData.email.$error" class="invalid-feedback">
                 Este campo é requerido.
+              </div>
+              <div v-if="error" class="invalid-feedback">
+                <div v-for="(v, k) in error.email" :key="k" role="alert">
+                  <p>{{ v }}</p>
+                </div>
               </div>
             </div>
 
@@ -75,7 +75,9 @@
                   type="password"
                   class="form-control"
                   v-model="formData.password"
-                  :class="{ 'is-invalid': $v.formData.password.$error }"
+                  :class="{
+                    'is-invalid': error || $v.formData.password.$error,
+                  }"
                   @change="$v.formData.password.$touch()"
                   id="inputPassword"
                   autocomplete="new-password"
@@ -85,7 +87,12 @@
                   v-if="$v.formData.password.$error"
                   class="invalid-feedback"
                 >
-                  Este campo é requerido.
+                  Este campo precisa ter pelo menos 8 digitos
+                </div>
+                <div v-if="error" class="invalid-feedback">
+                  <div v-for="(v, k) in error.password" :key="k" role="alert">
+                    <p>{{ v }}</p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -111,13 +118,8 @@
 
 <script>
 import { required, minLength, email } from "vuelidate/lib/validators";
-import LoadingComponent from "../../components/LoadingComponent";
-import FlashMessageComponent from "../../components/FlashMessageComponent.vue";
-
-import { api } from "../../services";
 
 export default {
-  components: { LoadingComponent, FlashMessageComponent },
   data() {
     return {
       formData: {
@@ -137,7 +139,7 @@ export default {
   },
   validations: {
     formData: {
-      name: { required, minLength: minLength(3) },
+      name: { required },
       email: { required, email },
       password: { required, minLength: minLength(8) },
     },
@@ -147,7 +149,7 @@ export default {
       if (!this.$v.$invalid) {
         this.$store.dispatch("registerUser", this.formData).then((_) => {
           if (this.$store.state.login) {
-            this.$router.push({ name: "evento" });
+            this.$router.push({ name: "index" });
           }
         });
       } else {

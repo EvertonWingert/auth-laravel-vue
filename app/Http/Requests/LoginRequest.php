@@ -25,7 +25,17 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => 'required|email',
-            'password' => 'required',
+            'password' => 'required|min:8',
+        ];
+    }
+    public function messages()
+    {
+        return [
+            
+            'email.required' => 'Email é requerido',
+            'email.email' => 'Digite um email valido',
+            'password.min' => 'A senha precisa ter pelo menos :min dígitos ',
+            
         ];
     }
 }

@@ -26,9 +26,12 @@ export default {
         createTable(context, payload) {
             context.commit("UPDATE_LOADING", true);
             api.post("/event", payload)
-                .catch(err => {
-                    handleErrors(err);
-                    context.commit("UPDATE_ERROR", err.response);
+                .then(_ => {
+                    context.commit("UPDATE_ERROR", false);
+                })
+                .catch(error => {
+                    handleErrors(error);
+                    context.commit("UPDATE_ERROR", error.response.data.error);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -41,9 +44,9 @@ export default {
                     context.commit("UPDATE_TABLE", response.data.content);
                     context.commit("UPDATE_ERROR", false);
                 })
-                .catch(err => {
-                    handleErrors(err);
-                    context.commit("UPDATE_ERROR", err.response);
+                .catch(error => {
+                    handleErrors(error);
+                    context.commit("UPDATE_ERROR", error.response.data.error);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -55,12 +58,11 @@ export default {
                 .get("/event/" + payload)
                 .then(response => {
                     context.commit("UPDATE_ERROR", false);
-
                     return response;
                 })
-                .catch(err => {
-                    handleErrors(err);
-                    context.commit("UPDATE_ERROR", err.response);
+                .catch(error => {
+                    handleErrors(error);
+                    context.commit("UPDATE_ERROR", error.response.data.error);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -70,9 +72,12 @@ export default {
         deleteTable(context, payload) {
             context.commit("UPDATE_LOADING", true);
             api.delete(`/event/${payload}`)
-                .catch(err => {
-                    handleErrors(err);
-                    context.commit("UPDATE_ERROR", err.response);
+                .then(_ => {
+                    context.commit("UPDATE_ERROR", false);
+                })
+                .catch(error => {
+                    handleErrors(error);
+                    context.commit("UPDATE_ERROR", error.response.data.error);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -80,15 +85,14 @@ export default {
         },
         updateTable(context, payload) {
             context.commit("UPDATE_LOADING", true);
-            console.log(payload);
             api.put(`/event/${payload.id}`, payload)
                 .then(response => {
                     context.commit("UPDATE_TABLE", response.data.content);
                     context.commit("UPDATE_ERROR", false);
                 })
-                .catch(err => {
-                    handleErrors(err);
-                    context.commit("UPDATE_ERROR", err.response);
+                .catch(error => {
+                    handleErrors(error);
+                    context.commit("UPDATE_ERROR", error.response.data.error);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -102,10 +106,12 @@ export default {
                 .then(resp => {
                     context.commit("UPDATE_LOGIN", true);
                     $cookies.set("token", resp.data.token);
+
+                    context.commit("UPDATE_ERROR", false);
                 })
-                .catch(err => {
-                    context.commit("UPDATE_ERROR", err.response);
-                    handleErrors(err);
+                .catch(error => {
+                    handleErrors(error);
+                    context.commit("UPDATE_ERROR", error.response.data.errors);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -117,7 +123,9 @@ export default {
                 .post("/register", payload)
                 .then(resp => {
                     context.commit("UPDATE_LOGIN", true);
+                    console.log(resp.data.token);
                     $cookies.set("token", resp.data.token);
+                    context.commit("UPDATE_ERROR", false);
                 })
                 .catch(err => {
                     handleErrors(err);
@@ -128,6 +136,7 @@ export default {
                 });
         },
         logoutUser(context, _) {
+            context.commit("UPDATE_ERROR", false);
             context.commit("UPDATE_LOGIN", false);
             $cookies.remove("token");
         }

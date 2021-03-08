@@ -1,9 +1,5 @@
 <template>
   <div class="container">
-    <loading-component v-if="loading"></loading-component>
-    <div v-if="error != false" class="alert alert-danger mt-3" role="alert">
-      <p>{{ this.error }}</p>
-    </div>
     <div class="table-responsive mt-5 card rounded shadow p-3">
       <form class="row p-3 justify-content-center">
         <input
@@ -14,6 +10,9 @@
           aria-label="Search"
         />
       </form>
+      <router-link v-if="isAuth" :to="{name: 'createEvent'}">
+        <button class="btn btn-primary">Criar evento</button>
+      </router-link>
       <table class="table table-hover">
         <thead>
           <tr>
@@ -21,7 +20,7 @@
             <th scope="col">NOME</th>
             <th scope="col">DATA</th>
             <th scope="col">DESCRIÇÃO</th>
-            <th scope="col">AÇÕES</th>
+            <th v-if="isAuth" scope="col">AÇÕES</th>
           </tr>
         </thead>
         <tbody v-for="data in filteredList" :key="data.id">
@@ -30,17 +29,22 @@
             <td>{{ data.name }}</td>
             <td>{{ data.date }}</td>
             <td>{{ data.desc }}</td>
-            <td>
-              <router-link
-                class="text-reset"
-                :to="{ name: 'editEvent', params: { id: data.id } }"
-              >
-                <i class="fas fa-edit"></i>
-              </router-link>
-            </td>
-            <td>
-              <i @click.prevent="deleteEvent(data.id)" class="fas fa-trash"></i>
-            </td>
+            <div v-if="isAuth">
+              <td>
+                <router-link
+                  class="text-reset"
+                  :to="{ name: 'editEvent', params: { id: data.id } }"
+                >
+                  <i class="fas fa-edit"></i>
+                </router-link>
+              </td>
+              <td>
+                <i
+                  @click.prevent="deleteEvent(data.id)"
+                  class="fas fa-trash"
+                ></i>
+              </td>
+            </div>
           </tr>
         </tbody>
       </table>
@@ -49,12 +53,8 @@
 </template>
 
 <script>
-import { required } from "vuelidate/lib/validators";
-import { api } from "../services";
-import LoadingComponent from "./LoadingComponent.vue";
 
 export default {
-  components: { LoadingComponent },
   data() {
     return {
       search: "",
@@ -75,6 +75,11 @@ export default {
         return data.name.toLowerCase().includes(this.search.toLowerCase());
       });
     },
+    
+      isAuth() {
+        return this.$store.state.login;
+      },
+    
   },
   methods: {
     fetchData() {

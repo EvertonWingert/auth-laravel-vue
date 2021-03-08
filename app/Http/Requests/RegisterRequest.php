@@ -24,7 +24,7 @@ class RegisterRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|min:3',
+            'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:8',
         ];
@@ -36,7 +36,6 @@ class RegisterRequest extends FormRequest
             'email.required' => 'Email é requerido',
             'email.email' => 'Digite um email valido',
             'password.min' => 'A senha precisa ter pelo menos :min dígitos ',
-            'name.min' => 'O nome precisa ter pelo menos :min dígitos',
             
         ];
     }

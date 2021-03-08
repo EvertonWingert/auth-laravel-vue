@@ -3,12 +3,8 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-12 col-md-5 col-xl-4 my-5">
-          <h1 class=" text-center mb-3">Login</h1>
-          <loading-component v-if="loading"></loading-component>
-          <flash-message-component
-            v-if="message.type"
-            :message="message"
-          ></flash-message-component>
+          <h1 class="text-center mb-3">Login</h1>
+
           <form @submit.prevent="login">
             <!-- Email address -->
             <div class="form-group">
@@ -21,13 +17,20 @@
                 class="form-control"
                 v-model="formData.email"
                 id="inputEmail"
-                :class="{ 'is-invalid': $v.formData.email.$error }"
+                :class="{
+                  'is-invalid': error || $v.formData.email.$error,
+                }"
                 @change="$v.formData.email.$touch()"
                 autocomplete="email"
                 required
               />
               <div v-if="$v.formData.email.$error" class="invalid-feedback">
                 Este campo é requerido.
+              </div>
+              <div v-if="error && error.email" class="invalid-feedback">
+                <div v-for="(v, k) in error.email" :key="k" role="alert">
+                  <p>{{ v }}</p>
+                </div>
               </div>
             </div>
 
@@ -49,7 +52,9 @@
                   class="form-control"
                   v-model="formData.password"
                   id="inputPassword"
-                  :class="{ 'is-invalid': $v.formData.password.$error }"
+                  :class="{
+                    'is-invalid': error || $v.formData.password.$error,
+                  }"
                   @change="$v.formData.password.$touch()"
                   autocomplete="password"
                   required
@@ -59,6 +64,12 @@
                   class="invalid-feedback"
                 >
                   Este campo é requerido.
+                </div>
+
+                <div v-if="error && error.password" class="invalid-feedback">
+                  <div v-for="(v, k) in error.password" :key="k" role="alert">
+                    <p>{{ v }}</p>
+                  </div>
                 </div>
 
                 <!-- Icon -->
@@ -73,9 +84,8 @@
             <!-- Link -->
             <div class="text-center">
               <small class="text-muted text-center">
-                Não tem uma conta ainda? 
+                Não tem uma conta ainda?
                 <router-link to="register"><a>Registrar</a>.</router-link>
-                
               </small>
             </div>
           </form>
@@ -86,16 +96,10 @@
 </template>
 
 <script>
-import LoadingComponent from "../../components/LoadingComponent";
 import { required, minLength, email } from "vuelidate/lib/validators";
-import { api } from "../../services";
-import FlashMessageComponent from "../../components/FlashMessageComponent.vue";
+import Swal from "sweetalert2";
 
 export default {
-  components: {
-    LoadingComponent,
-    FlashMessageComponent,
-  },
   data() {
     return {
       formData: {
@@ -103,7 +107,6 @@ export default {
         password: null,
       },
       response: [],
-      loading: false,
       message: {
         type: "",
         text: "",
@@ -117,29 +120,28 @@ export default {
       password: { required, minLength: minLength(8) },
     },
   },
+  computed: {
+    loading() {
+      return this.$store.state.isLoading;
+    },
+    error() {
+      return this.$store.state.error;
+    },
+  },
   methods: {
     login() {
-      this.$store.dispatch("loginUser", this.formData).then((_) => {
-        if (this.$store.state.login) {
-          this.$router.push({ name: "evento" });
-        } else {
-          console.log(this.$store.state.error.data.errors.email[0]);
-          
-          this.flashMessage(
-            "danger",
-            this.$store.state.error.data.errors.email[0]
-          );
-          
-        }
-      });
-    },
-    flashMessage(type, text) {
-      this.message.type = type;
-      this.message.text = text;
-      setTimeout(
-        () => ((this.message.type = ""), (this.message.text = "")),
-        3000
-      );
+      if (!this.$v.$invalid) {
+        this.$store.dispatch("loginUser", this.formData).then((_) => {
+          if (this.$store.state.login) {
+            this.$router.push({ name: "index" });
+          } else {
+            console.log(this.$store.state.error);
+            Swal.fire("Oops...", this.$store.state.error, "error");
+          }
+        });
+      } else {
+        this.$v.$touch();
+      }
     },
   },
   mounted() {

@@ -4,10 +4,10 @@ import VueRouter from "vue-router";
 import Login from "./views/auth/LoginComponent";
 import Register from "./views/auth/RegisterComponent";
 import Evento from "./views/EventoComponent";
-import Welcome from "./views/WelcomeComponent";
 import NotFound from "./components/NotFoundComponent";
-import CreateEvent from "./views/admin/CreateEventComponent";
-import EditEvent from "./views/admin/EditEventComponent";
+import CreateEvent from "./views/auth/admin/CreateEventComponent";
+import EditEvent from "./views/auth/admin/EditEventComponent";
+import Table from "./components/TableComponent";
 Vue.use(VueRouter);
 
 const router = new VueRouter({
@@ -16,7 +16,7 @@ const router = new VueRouter({
         {
             path: "/",
             name: "entrada",
-            component: Welcome,
+            component: Table,
             meta: {
                 guest: true
             }
@@ -41,35 +41,42 @@ const router = new VueRouter({
             path: "/evento",
             name: "evento",
             component: Evento,
-            meta: {
-                requiresAuth: true
-            }
+           
+            children: [
+                {
+                    path: "",
+                    name: 'index',
+                    component: Table,
+                },
+                {
+                    path: "create",
+                    name: 'createEvent',
+                    component: CreateEvent,
+                    meta: {
+                        requiresAuth: true
+                    },
+                    
+                },
+                {
+                    path: "edit/:id",
+                    name: "editEvent",
+                    component: EditEvent,
+                    props: true,
+                    meta: {
+                        requiresAuth: true
+                    },
+                    
+                },
+            ],
         },
-
-        {
-            path: "/evento/create",
-            name: "createEvent",
-            component: CreateEvent,
-            meta: {
-                requiresAuth: true
-            }
-        },
-        {
-            path: "/evento/edit/:id",
-            name: "editEvent",
-            component: EditEvent,
-            props: true,
-            meta: {
-                requiresAuth: true
-            }
-        },
-
+          
+        
         {
             path: "/:catchAll(.*)",
             name: "NotFound",
             component: NotFound
         }
-    ]
+    ],
 });
 
 router.beforeEach((to, from, next) => {
