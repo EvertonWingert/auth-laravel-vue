@@ -24,6 +24,7 @@
             </router-link>
             </li>
           </ul>
+          {{isAuth}}
           <div v-if="isAuth">
             <a class="p-2" @click="logout">Logout</a>
           </div>

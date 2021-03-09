@@ -4,13 +4,13 @@ import router from "./routes";
 export default {
     state: {
         table: [],
-        isAuthenticated: false,
+        isAuthenticated:false,
         isLoading: false,
         error: []
     },
     mutations: {
         UPDATE_LOGIN(state, payload) {
-            state.login = payload;
+            state.isAuthenticated = payload;
         },
         UPDATE_TABLE(state, payload) {
             state.table = payload;
@@ -28,9 +28,6 @@ export default {
             api.post("/event", payload)
                 .then(_ => {
                     context.commit("UPDATE_ERROR", false);
-                })
-                .catch(error => {
-                    context.commit("UPDATE_ERROR", error.response.data.error);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -102,16 +99,16 @@ export default {
                 });
         },
         async registerUser(context, payload) {
+            console.log(context);
+
             context.commit("UPDATE_LOADING", true);
-            await api
-                .post("/register", payload)
+            api.post("/register", payload)
                 .then(resp => {
                     context.commit("UPDATE_LOGIN", true);
                     console.log(resp.data.token);
                     $cookies.set("token", resp.data.token);
                     context.commit("UPDATE_ERROR", false);
                 })
-
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
                 });
@@ -119,16 +116,16 @@ export default {
         logoutUser(context, _) {
             api.post(`/logout`)
                 .then(_ => {
-                    context.commit("removeCredentials");
+                    context.dispatch("removeCredentials");
+                }).catch(_ =>{
+                    context.dispatch("removeCredentials");
                 })
-
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
                 });
         },
+
         removeCredentials(context, _) {
-            context.commit("UPDATE_ERROR", false);
-            context.commit("UPDATE_LOGIN", false);
             $cookies.remove("token");
             router.push({ name: "login" });
         }

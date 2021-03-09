@@ -32,6 +32,9 @@ Vue.component('app', require('./App.vue').default);
 Vue.component('notfound', require('./components/NotFoundComponent.vue').default);
 
 
+
+
+
 const app = new Vue({
     el: '#app',
     //router: new VueRouter(routes),

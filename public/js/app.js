@@ -2041,6 +2041,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: {
     isAuth: function isAuth() {
@@ -2194,7 +2195,6 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_TableComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../components/TableComponent */ "./resources/js/components/TableComponent.vue");
 //
 //
 //
@@ -2202,12 +2202,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-
-/* harmony default export */ __webpack_exports__["default"] = ({
-  components: {
-    TableComponent: _components_TableComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
-  }
-});
+/* harmony default export */ __webpack_exports__["default"] = ({});
 
 /***/ }),
 
@@ -2377,7 +2372,9 @@ __webpack_require__.r(__webpack_exports__);
       }
     }
   },
-  mounted: function mounted() {
+  created: function created() {
+    this.$store.commit("UPDATE_LOGIN", false);
+    this.$store.commit("UPDATE_ERROR", null);
     this.$store.commit("UPDATE_ERROR", null);
   }
 });
@@ -43093,7 +43090,7 @@ var render = function() {
                 1
               )
             ]),
-            _vm._v(" "),
+            _vm._v("\n        " + _vm._s(_vm.isAuth) + "\n        "),
             _vm.isAuth
               ? _c("div", [
                   _c("a", { staticClass: "p-2", on: { click: _vm.logout } }, [
@@ -43346,7 +43343,7 @@ var render = function() {
     "div",
     { staticClass: "container" },
     [
-      _c("h1", { staticClass: " py-5" }, [_vm._v("Evento")]),
+      _c("h1", { staticClass: "py-5" }, [_vm._v("Evento")]),
       _vm._v(" "),
       _c("router-view")
     ],
@@ -63099,6 +63096,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _views_auth_admin_CreateEventComponent__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./views/auth/admin/CreateEventComponent */ "./resources/js/views/auth/admin/CreateEventComponent.vue");
 /* harmony import */ var _views_auth_admin_EditEventComponent__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./views/auth/admin/EditEventComponent */ "./resources/js/views/auth/admin/EditEventComponent.vue");
 /* harmony import */ var _components_TableComponent__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./components/TableComponent */ "./resources/js/components/TableComponent.vue");
+/* harmony import */ var vue_cookies__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vue-cookies */ "./node_modules/vue-cookies/vue-cookies.js");
+/* harmony import */ var vue_cookies__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(vue_cookies__WEBPACK_IMPORTED_MODULE_9__);
+
 
 
 
@@ -63112,13 +63112,6 @@ vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODU
 var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
   mode: "history",
   routes: [{
-    path: "/",
-    name: "entrada",
-    component: _components_TableComponent__WEBPACK_IMPORTED_MODULE_8__["default"],
-    meta: {
-      guest: true
-    }
-  }, {
     path: "/login",
     name: "login",
     component: _views_auth_LoginComponent__WEBPACK_IMPORTED_MODULE_2__["default"],
@@ -63137,7 +63130,7 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     name: "evento",
     component: _views_EventoComponent__WEBPACK_IMPORTED_MODULE_4__["default"],
     children: [{
-      path: "",
+      path: "index",
       name: 'index',
       component: _components_TableComponent__WEBPACK_IMPORTED_MODULE_8__["default"]
     }, {
@@ -63166,24 +63159,20 @@ router.beforeEach(function (to, from, next) {
   if (to.matched.some(function (record) {
     return record.meta.guest;
   })) {
-    if ($cookies.get("token")) {
+    if (vue_cookies__WEBPACK_IMPORTED_MODULE_9___default.a.get("token")) {
       next("/evento");
-    } else {
-      next();
     }
   }
 
   if (to.matched.some(function (record) {
     return record.meta.requiresAuth;
   })) {
-    if (!$cookies.get("token")) {
+    if (!vue_cookies__WEBPACK_IMPORTED_MODULE_9___default.a.get("token")) {
       next("/login");
-    } else {
-      next();
     }
-  } else {
-    next();
   }
+
+  next();
 });
 /* harmony default export */ __webpack_exports__["default"] = (router);
 
@@ -63221,9 +63210,9 @@ axiosInstance.interceptors.request.use(function (config) {
 }, function (error) {
   return Promise.reject(error);
 });
-axios__WEBPACK_IMPORTED_MODULE_0___default.a.interceptors.response.use(null, function (error) {
+axiosInstance.interceptors.response.use(null, function (error) {
   if (error.response.status == 401) {
-    console.log('sem autorização');
+    console.log("sem autorização");
     _store__WEBPACK_IMPORTED_MODULE_1__["default"].actions.removeCredentials("removeCredentials");
   }
 
@@ -63280,7 +63269,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   mutations: {
     UPDATE_LOGIN: function UPDATE_LOGIN(state, payload) {
-      state.login = payload;
+      state.isAuthenticated = payload;
     },
     UPDATE_TABLE: function UPDATE_TABLE(state, payload) {
       state.table = payload;
@@ -63297,8 +63286,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       context.commit("UPDATE_LOADING", true);
       _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/event", payload).then(function (_) {
         context.commit("UPDATE_ERROR", false);
-      })["catch"](function (error) {
-        context.commit("UPDATE_ERROR", error.response.data.error);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -63369,9 +63356,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
+                console.log(context);
                 context.commit("UPDATE_LOADING", true);
-                _context2.next = 3;
-                return _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/register", payload).then(function (resp) {
+                _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/register", payload).then(function (resp) {
                   context.commit("UPDATE_LOGIN", true);
                   console.log(resp.data.token);
                   $cookies.set("token", resp.data.token);
@@ -63390,14 +63377,14 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     },
     logoutUser: function logoutUser(context, _) {
       _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/logout").then(function (_) {
-        context.commit("removeCredentials");
+        context.dispatch("removeCredentials");
+      })["catch"](function (_) {
+        context.dispatch("removeCredentials");
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
     },
     removeCredentials: function removeCredentials(context, _) {
-      context.commit("UPDATE_ERROR", false);
-      context.commit("UPDATE_LOGIN", false);
       $cookies.remove("token");
       _routes__WEBPACK_IMPORTED_MODULE_2__["default"].push({
         name: "login"

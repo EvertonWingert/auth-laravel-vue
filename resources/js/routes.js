@@ -8,19 +8,14 @@ import NotFound from "./components/NotFoundComponent";
 import CreateEvent from "./views/auth/admin/CreateEventComponent";
 import EditEvent from "./views/auth/admin/EditEventComponent";
 import Table from "./components/TableComponent";
+import VueCookies from 'vue-cookies';
+
 Vue.use(VueRouter);
 
 const router = new VueRouter({
     mode: "history",
     routes: [
-        {
-            path: "/",
-            name: "entrada",
-            component: Table,
-            meta: {
-                guest: true
-            }
-        },
+
         {
             path: "/login",
             name: "login",
@@ -41,10 +36,9 @@ const router = new VueRouter({
             path: "/evento",
             name: "evento",
             component: Evento,
-           
             children: [
                 {
-                    path: "",
+                    path: "index",
                     name: 'index',
                     component: Table,
                 },
@@ -81,21 +75,17 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.guest)) {
-        if ($cookies.get("token")) {
+        if (VueCookies.get("token")) {
+            
             next("/evento");
-        } else {
-            next();
         }
     }
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        if (!$cookies.get("token")) {
+        if (!VueCookies.get("token")) {
             next("/login");
-        } else {
-            next();
         }
-    } else {
-        next();
-    }
+    } 
+    next();
 });
 
 export default router;

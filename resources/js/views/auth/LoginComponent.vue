@@ -144,8 +144,11 @@ export default {
       }
     },
   },
-  mounted() {
+  created() {
+    this.$store.commit("UPDATE_LOGIN", false);
+    this.$store.commit("UPDATE_ERROR", null);
     this.$store.commit("UPDATE_ERROR", null);
   },
+
 };
 </script>
