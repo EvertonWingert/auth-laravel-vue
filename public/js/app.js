@@ -2317,8 +2317,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -43423,7 +43421,7 @@ var render = function() {
                           class: {
                             "is-invalid":
                               _vm.$v.formData.email.$error ||
-                              (_vm.error && _vm.error.email)
+                              _vm.error.hasOwnProperty("email")
                           },
                           attrs: {
                             type: "email",
@@ -43456,14 +43454,6 @@ var render = function() {
                               )
                             ])
                           : _vm._e(),
-                        _vm._v(" "),
-                        _c("div", [
-                          _vm._v(
-                            "\n                " +
-                              _vm._s(_vm.error) +
-                              "\n              "
-                          )
-                        ]),
                         _vm._v(" "),
                         _vm.error
                           ? _c(
@@ -43501,7 +43491,7 @@ var render = function() {
                               class: {
                                 "is-invalid":
                                   _vm.$v.formData.password.$error ||
-                                  (_vm.error && _vm.error.email)
+                                  _vm.error.hasOwnProperty("password")
                               },
                               attrs: {
                                 type: "password",
@@ -43669,7 +43659,7 @@ var render = function() {
                           class: {
                             "is-invalid":
                               _vm.$v.formData.name.$error ||
-                              (_vm.error && _vm.error.name)
+                              _vm.error.hasOwnProperty("name")
                           },
                           attrs: {
                             type: "text",
@@ -43735,7 +43725,7 @@ var render = function() {
                           class: {
                             "is-invalid":
                               _vm.$v.formData.email.$error ||
-                              (_vm.error && _vm.error.email)
+                              _vm.error.hasOwnProperty("email")
                           },
                           attrs: {
                             type: "email",
@@ -43805,7 +43795,7 @@ var render = function() {
                               class: {
                                 "is-invalid":
                                   _vm.$v.formData.password.$error ||
-                                  (_vm.error && _vm.error.password)
+                                  _vm.error.hasOwnProperty("password")
                               },
                               attrs: {
                                 type: "password",

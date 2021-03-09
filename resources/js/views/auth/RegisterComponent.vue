@@ -23,7 +23,7 @@
                   class="form-control"
                   :class="{
                     'is-invalid':
-                      $v.formData.name.$error || (error && error.name),
+                      $v.formData.name.$error || error.hasOwnProperty('name'),
                   }"
                   v-model="formData.name"
                   @change="$v.formData.name.$touch()"
@@ -51,7 +51,7 @@
                   class="form-control"
                   :class="{
                     'is-invalid':
-                      $v.formData.email.$error || (error && error.email),
+                      $v.formData.email.$error || error.hasOwnProperty('email'),
                   }"
                   v-model="formData.email"
                   @change="$v.formData.email.$touch()"
@@ -89,7 +89,7 @@
                     :class="{
                       'is-invalid':
                         $v.formData.password.$error ||
-                        (error && error.password),
+                        error.hasOwnProperty('password')
                     }"
                     @change="$v.formData.password.$touch()"
                     id="inputPassword"

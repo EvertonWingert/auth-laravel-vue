@@ -25,7 +25,7 @@
                   id="inputEmail"
                   :class="{
                     'is-invalid':
-                      $v.formData.email.$error || (error && error.email),
+                      $v.formData.email.$error || error.hasOwnProperty('email'),
                   }"
                   @change="$v.formData.email.$touch()"
                   autocomplete="email"
@@ -34,9 +34,7 @@
                 <div v-if="$v.formData.email.$error" class="invalid-feedback">
                   Digite um email valido
                 </div>
-                <div>
-                  {{ error }}
-                </div>
+
                 <div v-if="error" class="invalid-feedback">
                   <div v-for="(v, k) in error.email" :key="k" role="alert">
                     <p>{{ v }}</p>
@@ -63,7 +61,7 @@
                     id="inputPassword"
                     :class="{
                       'is-invalid':
-                        $v.formData.password.$error || (error && error.email),
+                        $v.formData.password.$error || error.hasOwnProperty('password'),
                     }"
                     @change="$v.formData.password.$touch()"
                     autocomplete="password"
