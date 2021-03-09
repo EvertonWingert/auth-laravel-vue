@@ -10,10 +10,15 @@
           aria-label="Search"
         />
       </form>
-      <router-link v-if="isAuth" :to="{name: 'createEvent'}">
+      <router-link v-if="isAuth" :to="{ name: 'createEvent' }">
         <button class="btn btn-primary">Criar evento</button>
       </router-link>
-      <table class="table table-hover">
+      <div v-if="loading" class="text-center">
+        <div class="spinner-border" role="status">
+          <span class="sr-only">Loading...</span>
+        </div>
+      </div>
+      <table v-else class="table table-hover">
         <thead>
           <tr>
             <th scope="col">ID</th>
@@ -53,7 +58,6 @@
 </template>
 
 <script>
-
 export default {
   data() {
     return {
@@ -75,18 +79,17 @@ export default {
         return data.name.toLowerCase().includes(this.search.toLowerCase());
       });
     },
-    
-      isAuth() {
-        return this.$store.state.isAuthenticated;
-      },
-    
+
+    isAuth() {
+      return this.$store.state.isAuthenticated;
+    },
   },
   methods: {
     fetchData() {
       this.$store.dispatch("readTable");
     },
     deleteEvent(id) {
-      this.$store.dispatch("deleteTable", id).then((response) => {
+      this.$store.dispatch("deleteTable", id).then((_) => {
         this.fetchData();
       });
     },

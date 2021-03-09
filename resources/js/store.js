@@ -4,7 +4,7 @@ import router from "./routes";
 export default {
     state: {
         table: [],
-        isAuthenticated:false,
+        isAuthenticated: false,
         isLoading: false,
         error: []
     },
@@ -27,7 +27,10 @@ export default {
             context.commit("UPDATE_LOADING", true);
             api.post("/event", payload)
                 .then(_ => {
-                    context.commit("UPDATE_ERROR", false);
+                    context.commit("UPDATE_ERROR", []);
+                })
+                .catch(err => {
+                    context.commit("UPDATE_ERROR", err.response.data.errors);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -38,7 +41,10 @@ export default {
             api.get("/event", payload)
                 .then(response => {
                     context.commit("UPDATE_TABLE", response.data.content);
-                    context.commit("UPDATE_ERROR", false);
+                    context.commit("UPDATE_ERROR", []);
+                })
+                .catch(err => {
+                    context.commit("UPDATE_ERROR", err.response.data.errors);
                 })
 
                 .finally(_ => {
@@ -50,8 +56,11 @@ export default {
             const response = api
                 .get("/event/" + payload)
                 .then(response => {
-                    context.commit("UPDATE_ERROR", false);
+                    context.commit("UPDATE_ERROR", []);
                     return response;
+                })
+                .catch(err => {
+                    context.commit("UPDATE_ERROR", err.response.data.errors);
                 })
 
                 .finally(_ => {
@@ -63,7 +72,10 @@ export default {
             context.commit("UPDATE_LOADING", true);
             api.delete(`/event/${payload}`)
                 .then(_ => {
-                    context.commit("UPDATE_ERROR", false);
+                    context.commit("UPDATE_ERROR", []);
+                })
+                .catch(err => {
+                    context.commit("UPDATE_ERROR", err.response.data.errors);
                 })
 
                 .finally(_ => {
@@ -75,7 +87,10 @@ export default {
             api.put(`/event/${payload.id}`, payload)
                 .then(response => {
                     context.commit("UPDATE_TABLE", response.data.content);
-                    context.commit("UPDATE_ERROR", false);
+                    context.commit("UPDATE_ERROR", []);
+                })
+                .catch(err => {
+                    context.commit("UPDATE_ERROR", err.response.data.errors);
                 })
 
                 .finally(_ => {
@@ -84,30 +99,33 @@ export default {
         },
         async loginUser(context, payload) {
             context.commit("UPDATE_LOADING", true);
-
             await api
                 .post("/login", payload)
                 .then(resp => {
                     context.commit("UPDATE_LOGIN", true);
+                    context.commit("UPDATE_ERROR", []);
                     $cookies.set("token", resp.data.token);
-
-                    context.commit("UPDATE_ERROR", false);
+                    $router.push({ name: "index" });
                 })
-
+                .catch(err => {
+                    context.commit("UPDATE_ERROR", err.response.data.errors);
+                })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
                 });
         },
         async registerUser(context, payload) {
-            console.log(context);
-
             context.commit("UPDATE_LOADING", true);
-            api.post("/register", payload)
+            await api
+                .post("/register", payload)
                 .then(resp => {
                     context.commit("UPDATE_LOGIN", true);
-                    console.log(resp.data.token);
+                    context.commit("UPDATE_ERROR", []);
                     $cookies.set("token", resp.data.token);
-                    context.commit("UPDATE_ERROR", false);
+                    $router.push({ name: "index" });
+                })
+                .catch(err => {
+                    context.commit("UPDATE_ERROR", err.response.data.errors);
                 })
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
@@ -117,7 +135,8 @@ export default {
             api.post(`/logout`)
                 .then(_ => {
                     context.dispatch("removeCredentials");
-                }).catch(_ =>{
+                })
+                .catch(_ => {
                     context.dispatch("removeCredentials");
                 })
                 .finally(_ => {
@@ -125,7 +144,7 @@ export default {
                 });
         },
 
-        removeCredentials(context, _) {
+        removeCredentials() {
             $cookies.remove("token");
             router.push({ name: "login" });
         }

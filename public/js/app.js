@@ -2031,17 +2031,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   computed: {
     isAuth: function isAuth() {
@@ -2139,6 +2128,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2173,7 +2167,7 @@ __webpack_require__.r(__webpack_exports__);
     deleteEvent: function deleteEvent(id) {
       var _this2 = this;
 
-      this.$store.dispatch("deleteTable", id).then(function (response) {
+      this.$store.dispatch("deleteTable", id).then(function (_) {
         _this2.fetchData();
       });
     }
@@ -2316,6 +2310,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2324,11 +2327,6 @@ __webpack_require__.r(__webpack_exports__);
       formData: {
         email: null,
         password: null
-      },
-      response: [],
-      message: {
-        type: "",
-        text: ""
       }
     };
   },
@@ -2357,15 +2355,8 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       if (!this.$v.$invalid) {
-        this.$store.dispatch("loginUser", this.formData).then(function (_) {
-          if (_this.$store.state.login) {
-            _this.$router.push({
-              name: "index"
-            });
-          } else {
-            console.log(_this.$store.state.error);
-            sweetalert2__WEBPACK_IMPORTED_MODULE_1___default.a.fire("Oops...", _this.$store.state.error, "error");
-          }
+        this.$store.dispatch("loginUser", this.formData)["catch"](function (resp) {
+          console.log(_this.error);
         });
       } else {
         this.$v.$touch();
@@ -2374,8 +2365,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   created: function created() {
     this.$store.commit("UPDATE_LOGIN", false);
-    this.$store.commit("UPDATE_ERROR", null);
-    this.$store.commit("UPDATE_ERROR", null);
+    this.$store.commit("UPDATE_ERROR", []);
   }
 });
 
@@ -2392,6 +2382,18 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vuelidate/lib/validators */ "./node_modules/vuelidate/lib/validators/index.js");
 /* harmony import */ var vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -2535,8 +2537,7 @@ __webpack_require__.r(__webpack_exports__);
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
       },
       email: {
-        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
-        email: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["email"]
+        required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"]
       },
       password: {
         required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_0__["required"],
@@ -2549,20 +2550,17 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       if (!this.$v.$invalid) {
-        this.$store.dispatch("registerUser", this.formData).then(function (_) {
-          if (_this.$store.state.login) {
-            _this.$router.push({
-              name: "index"
-            });
-          }
+        this.$store.dispatch("registerUser", this.formData)["catch"](function (_) {
+          console.log(_this.error);
         });
       } else {
         this.$v.$touch();
       }
     }
   },
-  mounted: function mounted() {
-    this.$store.commit("UPDATE_ERROR", null);
+  created: function created() {
+    this.$store.commit("UPDATE_LOGIN", false);
+    this.$store.commit("UPDATE_ERROR", []);
   }
 });
 
@@ -43062,59 +43060,55 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("header", [
-    _c("nav", { staticClass: " navbar navbar-expand-lg navbar-dark bg-dark" }, [
-      _c("div", { staticClass: "container" }, [
-        _c("a", { staticClass: "navbar-brand", attrs: { href: "#" } }, [
-          _vm._v("Navbar")
-        ]),
-        _vm._v(" "),
-        _vm._m(0),
-        _vm._v(" "),
+  return _vm.isAuth
+    ? _c("header", [
         _c(
-          "div",
-          {
-            staticClass: "collapse navbar-collapse",
-            attrs: { id: "navbarSupportedContent" }
-          },
+          "nav",
+          { staticClass: "navbar navbar-expand-lg navbar-dark bg-dark" },
           [
-            _c("ul", { staticClass: "navbar-nav me-auto mb-2 mb-lg-0" }, [
+            _c("div", { staticClass: "container" }, [
+              _c("a", { staticClass: "navbar-brand", attrs: { href: "#" } }, [
+                _vm._v("Navbar")
+              ]),
+              _vm._v(" "),
+              _vm._m(0),
+              _vm._v(" "),
               _c(
-                "li",
-                { staticClass: "nav-item" },
+                "div",
+                {
+                  staticClass: "collapse navbar-collapse",
+                  attrs: { id: "navbarSupportedContent" }
+                },
                 [
-                  _c("router-link", { attrs: { to: { name: "index" } } }, [
-                    _c("a", { staticClass: "nav-link" }, [_vm._v("Evento")])
-                  ])
-                ],
-                1
-              )
-            ]),
-            _vm._v("\n        " + _vm._s(_vm.isAuth) + "\n        "),
-            _vm.isAuth
-              ? _c("div", [
+                  _c("ul", { staticClass: "navbar-nav me-auto mb-2 mb-lg-0" }, [
+                    _c(
+                      "li",
+                      { staticClass: "nav-item" },
+                      [
+                        _c(
+                          "router-link",
+                          { attrs: { to: { name: "index" } } },
+                          [
+                            _c("a", { staticClass: "nav-link" }, [
+                              _vm._v("Evento")
+                            ])
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  ]),
+                  _vm._v(" "),
                   _c("a", { staticClass: "p-2", on: { click: _vm.logout } }, [
                     _vm._v("Logout")
                   ])
-                ])
-              : _c(
-                  "div",
-                  [
-                    _c("router-link", { attrs: { to: { name: "register" } } }, [
-                      _c("a", { staticClass: "p-2" }, [_vm._v("Register")])
-                    ]),
-                    _vm._v(" "),
-                    _c("router-link", { attrs: { to: { name: "login" } } }, [
-                      _c("a", { staticClass: "p-2" }, [_vm._v("Login")])
-                    ])
-                  ],
-                  1
-                )
+                ]
+              )
+            ])
           ]
         )
       ])
-    ])
-  ])
+    : _vm._e()
 }
 var staticRenderFns = [
   function() {
@@ -43238,86 +43232,101 @@ var render = function() {
             ])
           : _vm._e(),
         _vm._v(" "),
-        _c(
-          "table",
-          { staticClass: "table table-hover" },
-          [
-            _c("thead", [
-              _c("tr", [
-                _c("th", { attrs: { scope: "col" } }, [_vm._v("ID")]),
+        _vm.loading
+          ? _c("div", { staticClass: "text-center" }, [_vm._m(0)])
+          : _c(
+              "table",
+              { staticClass: "table table-hover" },
+              [
+                _c("thead", [
+                  _c("tr", [
+                    _c("th", { attrs: { scope: "col" } }, [_vm._v("ID")]),
+                    _vm._v(" "),
+                    _c("th", { attrs: { scope: "col" } }, [_vm._v("NOME")]),
+                    _vm._v(" "),
+                    _c("th", { attrs: { scope: "col" } }, [_vm._v("DATA")]),
+                    _vm._v(" "),
+                    _c("th", { attrs: { scope: "col" } }, [
+                      _vm._v("DESCRIÇÃO")
+                    ]),
+                    _vm._v(" "),
+                    _vm.isAuth
+                      ? _c("th", { attrs: { scope: "col" } }, [_vm._v("AÇÕES")])
+                      : _vm._e()
+                  ])
+                ]),
                 _vm._v(" "),
-                _c("th", { attrs: { scope: "col" } }, [_vm._v("NOME")]),
-                _vm._v(" "),
-                _c("th", { attrs: { scope: "col" } }, [_vm._v("DATA")]),
-                _vm._v(" "),
-                _c("th", { attrs: { scope: "col" } }, [_vm._v("DESCRIÇÃO")]),
-                _vm._v(" "),
-                _vm.isAuth
-                  ? _c("th", { attrs: { scope: "col" } }, [_vm._v("AÇÕES")])
-                  : _vm._e()
-              ])
-            ]),
-            _vm._v(" "),
-            _vm._l(_vm.filteredList, function(data) {
-              return _c("tbody", { key: data.id }, [
-                _c("tr", [
-                  _c("th", { attrs: { scope: "row" } }, [
-                    _vm._v(_vm._s(data.id))
-                  ]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(data.name))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(data.date))]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(data.desc))]),
-                  _vm._v(" "),
-                  _vm.isAuth
-                    ? _c("div", [
-                        _c(
-                          "td",
-                          [
+                _vm._l(_vm.filteredList, function(data) {
+                  return _c("tbody", { key: data.id }, [
+                    _c("tr", [
+                      _c("th", { attrs: { scope: "row" } }, [
+                        _vm._v(_vm._s(data.id))
+                      ]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(data.name))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(data.date))]),
+                      _vm._v(" "),
+                      _c("td", [_vm._v(_vm._s(data.desc))]),
+                      _vm._v(" "),
+                      _vm.isAuth
+                        ? _c("div", [
                             _c(
-                              "router-link",
-                              {
-                                staticClass: "text-reset",
-                                attrs: {
-                                  to: {
-                                    name: "editEvent",
-                                    params: { id: data.id }
+                              "td",
+                              [
+                                _c(
+                                  "router-link",
+                                  {
+                                    staticClass: "text-reset",
+                                    attrs: {
+                                      to: {
+                                        name: "editEvent",
+                                        params: { id: data.id }
+                                      }
+                                    }
+                                  },
+                                  [_c("i", { staticClass: "fas fa-edit" })]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c("i", {
+                                staticClass: "fas fa-trash",
+                                on: {
+                                  click: function($event) {
+                                    $event.preventDefault()
+                                    return _vm.deleteEvent(data.id)
                                   }
                                 }
-                              },
-                              [_c("i", { staticClass: "fas fa-edit" })]
-                            )
-                          ],
-                          1
-                        ),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("i", {
-                            staticClass: "fas fa-trash",
-                            on: {
-                              click: function($event) {
-                                $event.preventDefault()
-                                return _vm.deleteEvent(data.id)
-                              }
-                            }
-                          })
-                        ])
-                      ])
-                    : _vm._e()
-                ])
-              ])
-            })
-          ],
-          2
-        )
+                              })
+                            ])
+                          ])
+                        : _vm._e()
+                    ])
+                  ])
+                })
+              ],
+              2
+            )
       ],
       1
     )
   ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "spinner-border", attrs: { role: "status" } },
+      [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+    )
+  }
+]
 render._withStripped = true
 
 
@@ -43384,168 +43393,193 @@ var render = function() {
           _c("div", { staticClass: "col-12 col-md-5 col-xl-4 my-5" }, [
             _c("h1", { staticClass: "text-center mb-3" }, [_vm._v("Login")]),
             _vm._v(" "),
-            _c(
-              "form",
-              {
-                on: {
-                  submit: function($event) {
-                    $event.preventDefault()
-                    return _vm.login($event)
-                  }
-                }
-              },
-              [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", [_vm._v("Email Address")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.formData.email,
-                        expression: "formData.email"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: {
-                      "is-invalid": _vm.error || _vm.$v.formData.email.$error
-                    },
-                    attrs: {
-                      type: "email",
-                      id: "inputEmail",
-                      autocomplete: "email",
-                      required: ""
-                    },
-                    domProps: { value: _vm.formData.email },
-                    on: {
-                      change: function($event) {
-                        return _vm.$v.formData.email.$touch()
-                      },
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.formData, "email", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.$v.formData.email.$error
-                    ? _c("div", { staticClass: "invalid-feedback" }, [
-                        _vm._v(
-                          "\n              Este campo é requerido.\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.error && _vm.error.email
-                    ? _c(
-                        "div",
-                        { staticClass: "invalid-feedback" },
-                        _vm._l(_vm.error.email, function(v, k) {
-                          return _c(
-                            "div",
-                            { key: k, attrs: { role: "alert" } },
-                            [_c("p", [_vm._v(_vm._s(v))])]
-                          )
-                        }),
-                        0
-                      )
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "input-group input-group-merge" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.formData.password,
-                          expression: "formData.password"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      class: {
-                        "is-invalid":
-                          _vm.error || _vm.$v.formData.password.$error
-                      },
-                      attrs: {
-                        type: "password",
-                        id: "inputPassword",
-                        autocomplete: "password",
-                        required: ""
-                      },
-                      domProps: { value: _vm.formData.password },
-                      on: {
-                        change: function($event) {
-                          return _vm.$v.formData.password.$touch()
-                        },
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.formData,
-                            "password",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.$v.formData.password.$error
-                      ? _c("div", { staticClass: "invalid-feedback" }, [
-                          _vm._v(
-                            "\n                Este campo é requerido.\n              "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.error && _vm.error.password
-                      ? _c(
-                          "div",
-                          { staticClass: "invalid-feedback" },
-                          _vm._l(_vm.error.password, function(v, k) {
-                            return _c(
-                              "div",
-                              { key: k, attrs: { role: "alert" } },
-                              [_c("p", [_vm._v(_vm._s(v))])]
-                            )
-                          }),
-                          0
-                        )
-                      : _vm._e()
-                  ])
-                ]),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  { staticClass: "btn btn-lg btn-block btn-primary mb-3" },
-                  [_vm._v("\n            Sign in\n          ")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "text-center" }, [
+            _vm.loading
+              ? _c("div", { staticClass: "text-center" }, [_vm._m(0)])
+              : _c("div", [
                   _c(
-                    "small",
-                    { staticClass: "text-muted text-center" },
+                    "form",
+                    {
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          return _vm.login($event)
+                        }
+                      }
+                    },
                     [
-                      _vm._v(
-                        "\n              Não tem uma conta ainda?\n              "
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", [_vm._v("Email Address")]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.formData.email,
+                              expression: "formData.email"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid":
+                              _vm.$v.formData.email.$error ||
+                              (_vm.error && _vm.error.email)
+                          },
+                          attrs: {
+                            type: "email",
+                            id: "inputEmail",
+                            autocomplete: "email",
+                            required: ""
+                          },
+                          domProps: { value: _vm.formData.email },
+                          on: {
+                            change: function($event) {
+                              return _vm.$v.formData.email.$touch()
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.formData,
+                                "email",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.$v.formData.email.$error
+                          ? _c("div", { staticClass: "invalid-feedback" }, [
+                              _vm._v(
+                                "\n                Digite um email valido\n              "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _c("div", [
+                          _vm._v(
+                            "\n                " +
+                              _vm._s(_vm.error) +
+                              "\n              "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _vm.error
+                          ? _c(
+                              "div",
+                              { staticClass: "invalid-feedback" },
+                              _vm._l(_vm.error.email, function(v, k) {
+                                return _c(
+                                  "div",
+                                  { key: k, attrs: { role: "alert" } },
+                                  [_c("p", [_vm._v(_vm._s(v))])]
+                                )
+                              }),
+                              0
+                            )
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "input-group input-group-merge" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formData.password,
+                                  expression: "formData.password"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              class: {
+                                "is-invalid":
+                                  _vm.$v.formData.password.$error ||
+                                  (_vm.error && _vm.error.email)
+                              },
+                              attrs: {
+                                type: "password",
+                                id: "inputPassword",
+                                autocomplete: "password",
+                                required: ""
+                              },
+                              domProps: { value: _vm.formData.password },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$v.formData.password.$touch()
+                                },
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.formData,
+                                    "password",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.$v.formData.email.$error
+                              ? _c("div", { staticClass: "invalid-feedback" }, [
+                                  _vm._v(
+                                    "\n                  Este campo precisa ter 8 digitos\n                "
+                                  )
+                                ])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.error
+                              ? _c(
+                                  "div",
+                                  { staticClass: "invalid-feedback" },
+                                  _vm._l(_vm.error.password, function(v, k) {
+                                    return _c(
+                                      "div",
+                                      { key: k, attrs: { role: "alert" } },
+                                      [_c("p", [_vm._v(_vm._s(v))])]
+                                    )
+                                  }),
+                                  0
+                                )
+                              : _vm._e()
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-lg btn-block btn-primary mb-3"
+                        },
+                        [_vm._v("\n              Sign in\n            ")]
                       ),
-                      _c("router-link", { attrs: { to: "register" } }, [
-                        _c("a", [_vm._v("Registrar")]),
-                        _vm._v(".")
+                      _vm._v(" "),
+                      _c("div", { staticClass: "text-center" }, [
+                        _c(
+                          "small",
+                          { staticClass: "text-muted text-center" },
+                          [
+                            _vm._v(
+                              "\n                Não tem uma conta ainda?\n                "
+                            ),
+                            _c("router-link", { attrs: { to: "register" } }, [
+                              _c("a", [_vm._v("Registrar")]),
+                              _vm._v(".")
+                            ])
+                          ],
+                          1
+                        )
                       ])
-                    ],
-                    1
+                    ]
                   )
                 ])
-              ]
-            )
           ])
         ])
       ])
@@ -43553,6 +43587,16 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "spinner-border", attrs: { role: "status" } },
+      [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+    )
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -43595,226 +43639,250 @@ var render = function() {
           _c("div", { staticClass: "col-12 col-md-5 col-xl-4 my-5" }, [
             _c("h1", { staticClass: "text-center mb-3" }, [_vm._v("Register")]),
             _vm._v(" "),
-            _c(
-              "form",
-              {
-                on: {
-                  submit: function($event) {
-                    $event.preventDefault()
-                    return _vm.register($event)
-                  }
-                }
-              },
-              [
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", [_vm._v("Name")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.formData.name,
-                        expression: "formData.name"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: {
-                      "is-invalid": _vm.error || _vm.$v.formData.name.$error
-                    },
-                    attrs: {
-                      type: "text",
-                      id: "inputName",
-                      autocomplete: "name",
-                      required: ""
-                    },
-                    domProps: { value: _vm.formData.name },
-                    on: {
-                      change: function($event) {
-                        return _vm.$v.formData.name.$touch()
-                      },
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.formData, "name", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.$v.formData.name.$error
-                    ? _c("div", { staticClass: "invalid-feedback" }, [
-                        _vm._v(
-                          "\n              Este campo é requerido.\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.error
-                    ? _c(
-                        "div",
-                        { staticClass: "invalid-feedback" },
-                        _vm._l(_vm.error.name, function(v, k) {
-                          return _c(
-                            "div",
-                            { key: k, attrs: { role: "alert" } },
-                            [_c("p", [_vm._v(_vm._s(v[0]))])]
-                          )
-                        }),
-                        0
-                      )
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _c("label", [_vm._v("Email Address")]),
-                  _vm._v(" "),
-                  _c("input", {
-                    directives: [
-                      {
-                        name: "model",
-                        rawName: "v-model",
-                        value: _vm.formData.email,
-                        expression: "formData.email"
-                      }
-                    ],
-                    staticClass: "form-control",
-                    class: {
-                      "is-invalid": _vm.error || _vm.$v.formData.email.$error
-                    },
-                    attrs: {
-                      id: "inputEmail",
-                      autocomplete: "email",
-                      required: ""
-                    },
-                    domProps: { value: _vm.formData.email },
-                    on: {
-                      change: function($event) {
-                        return _vm.$v.formData.email.$touch()
-                      },
-                      input: function($event) {
-                        if ($event.target.composing) {
-                          return
-                        }
-                        _vm.$set(_vm.formData, "email", $event.target.value)
-                      }
-                    }
-                  }),
-                  _vm._v(" "),
-                  _vm.$v.formData.email.$error
-                    ? _c("div", { staticClass: "invalid-feedback" }, [
-                        _vm._v(
-                          "\n              Este campo é requerido.\n            "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.error
-                    ? _c(
-                        "div",
-                        { staticClass: "invalid-feedback" },
-                        _vm._l(_vm.error.email, function(v, k) {
-                          return _c(
-                            "div",
-                            { key: k, attrs: { role: "alert" } },
-                            [_c("p", [_vm._v(_vm._s(v))])]
-                          )
-                        }),
-                        0
-                      )
-                    : _vm._e()
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "form-group" }, [
-                  _vm._m(0),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "input-group input-group-merge" }, [
-                    _c("input", {
-                      directives: [
-                        {
-                          name: "model",
-                          rawName: "v-model",
-                          value: _vm.formData.password,
-                          expression: "formData.password"
-                        }
-                      ],
-                      staticClass: "form-control",
-                      class: {
-                        "is-invalid":
-                          _vm.error || _vm.$v.formData.password.$error
-                      },
-                      attrs: {
-                        type: "password",
-                        id: "inputPassword",
-                        autocomplete: "new-password",
-                        required: ""
-                      },
-                      domProps: { value: _vm.formData.password },
-                      on: {
-                        change: function($event) {
-                          return _vm.$v.formData.password.$touch()
-                        },
-                        input: function($event) {
-                          if ($event.target.composing) {
-                            return
-                          }
-                          _vm.$set(
-                            _vm.formData,
-                            "password",
-                            $event.target.value
-                          )
-                        }
-                      }
-                    }),
-                    _vm._v(" "),
-                    _vm.$v.formData.password.$error
-                      ? _c("div", { staticClass: "invalid-feedback" }, [
-                          _vm._v(
-                            "\n                Este campo precisa ter pelo menos 8 digitos\n              "
-                          )
-                        ])
-                      : _vm._e(),
-                    _vm._v(" "),
-                    _vm.error
-                      ? _c(
-                          "div",
-                          { staticClass: "invalid-feedback" },
-                          _vm._l(_vm.error.password, function(v, k) {
-                            return _c(
-                              "div",
-                              { key: k, attrs: { role: "alert" } },
-                              [_c("p", [_vm._v(_vm._s(v))])]
-                            )
-                          }),
-                          0
-                        )
-                      : _vm._e()
-                  ])
-                ]),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  { staticClass: "btn btn-lg btn-block btn-primary mb-3" },
-                  [_vm._v("\n            Registrar\n          ")]
-                ),
-                _vm._v(" "),
-                _c("div", { staticClass: "text-center" }, [
+            _vm.loading
+              ? _c("div", { staticClass: "text-center" }, [_vm._m(0)])
+              : _c("div", [
                   _c(
-                    "small",
-                    { staticClass: "text-muted text-center" },
+                    "form",
+                    {
+                      on: {
+                        submit: function($event) {
+                          $event.preventDefault()
+                          return _vm.register($event)
+                        }
+                      }
+                    },
                     [
-                      _vm._v(
-                        "\n              Já tem uma conta?\n              "
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", [_vm._v("Name")]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.formData.name,
+                              expression: "formData.name"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid":
+                              _vm.$v.formData.name.$error ||
+                              (_vm.error && _vm.error.name)
+                          },
+                          attrs: {
+                            type: "text",
+                            id: "inputName",
+                            autocomplete: "name",
+                            required: ""
+                          },
+                          domProps: { value: _vm.formData.name },
+                          on: {
+                            change: function($event) {
+                              return _vm.$v.formData.name.$touch()
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.formData,
+                                "name",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.$v.formData.name.$error
+                          ? _c("div", { staticClass: "invalid-feedback" }, [
+                              _vm._v(
+                                "\n                Este campo é requerido.\n              "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.error
+                          ? _c(
+                              "div",
+                              { staticClass: "invalid-feedback" },
+                              _vm._l(_vm.error.name, function(v, k) {
+                                return _c(
+                                  "div",
+                                  { key: k, attrs: { role: "alert" } },
+                                  [_c("p", [_vm._v(_vm._s(v))])]
+                                )
+                              }),
+                              0
+                            )
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _c("label", [_vm._v("Email Address")]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.formData.email,
+                              expression: "formData.email"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          class: {
+                            "is-invalid":
+                              _vm.$v.formData.email.$error ||
+                              (_vm.error && _vm.error.email)
+                          },
+                          attrs: {
+                            type: "email",
+                            id: "inputEmail",
+                            autocomplete: "email",
+                            required: ""
+                          },
+                          domProps: { value: _vm.formData.email },
+                          on: {
+                            change: function($event) {
+                              return _vm.$v.formData.email.$touch()
+                            },
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.formData,
+                                "email",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _vm.$v.formData.email.$error
+                          ? _c("div", { staticClass: "invalid-feedback" }, [
+                              _vm._v(
+                                "\n                Digite um email valido\n              "
+                              )
+                            ])
+                          : _vm._e(),
+                        _vm._v(" "),
+                        _vm.error
+                          ? _c(
+                              "div",
+                              { staticClass: "invalid-feedback" },
+                              _vm._l(_vm.error.email, function(v, k) {
+                                return _c(
+                                  "div",
+                                  { key: k, attrs: { role: "alert" } },
+                                  [_c("p", [_vm._v(_vm._s(v))])]
+                                )
+                              }),
+                              0
+                            )
+                          : _vm._e()
+                      ]),
+                      _vm._v(" "),
+                      _c("div", { staticClass: "form-group" }, [
+                        _vm._m(1),
+                        _vm._v(" "),
+                        _c(
+                          "div",
+                          { staticClass: "input-group input-group-merge" },
+                          [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.formData.password,
+                                  expression: "formData.password"
+                                }
+                              ],
+                              staticClass: "form-control",
+                              class: {
+                                "is-invalid":
+                                  _vm.$v.formData.password.$error ||
+                                  (_vm.error && _vm.error.password)
+                              },
+                              attrs: {
+                                type: "password",
+                                id: "inputPassword",
+                                autocomplete: "new-password",
+                                required: ""
+                              },
+                              domProps: { value: _vm.formData.password },
+                              on: {
+                                change: function($event) {
+                                  return _vm.$v.formData.password.$touch()
+                                },
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.formData,
+                                    "password",
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            }),
+                            _vm._v(" "),
+                            _vm.$v.formData.email.$error
+                              ? _c("div", { staticClass: "invalid-feedback" }, [
+                                  _vm._v(
+                                    "\n                  Este campo precisa ter 8 digitos\n                "
+                                  )
+                                ])
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _vm.error
+                              ? _c(
+                                  "div",
+                                  { staticClass: "invalid-feedback" },
+                                  _vm._l(_vm.error.password, function(v, k) {
+                                    return _c(
+                                      "div",
+                                      { key: k, attrs: { role: "alert" } },
+                                      [_c("p", [_vm._v(_vm._s(v))])]
+                                    )
+                                  }),
+                                  0
+                                )
+                              : _vm._e()
+                          ]
+                        )
+                      ]),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-lg btn-block btn-primary mb-3"
+                        },
+                        [_vm._v("\n              Registrar\n            ")]
                       ),
-                      _c("router-link", { attrs: { to: "login" } }, [
-                        _c("a", [_vm._v("Login")])
+                      _vm._v(" "),
+                      _c("div", { staticClass: "text-center" }, [
+                        _c(
+                          "small",
+                          { staticClass: "text-muted text-center" },
+                          [
+                            _vm._v(
+                              "\n                Já tem uma conta?\n                "
+                            ),
+                            _c("router-link", { attrs: { to: "login" } }, [
+                              _c("a", [_vm._v("Login")])
+                            ])
+                          ],
+                          1
+                        )
                       ])
-                    ],
-                    1
+                    ]
                   )
                 ])
-              ]
-            )
           ])
         ])
       ])
@@ -43822,6 +43890,16 @@ var render = function() {
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "div",
+      { staticClass: "spinner-border", attrs: { role: "status" } },
+      [_c("span", { staticClass: "sr-only" }, [_vm._v("Loading...")])]
+    )
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -63131,11 +63209,11 @@ var router = new vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]({
     component: _views_EventoComponent__WEBPACK_IMPORTED_MODULE_4__["default"],
     children: [{
       path: "index",
-      name: 'index',
+      name: "index",
       component: _components_TableComponent__WEBPACK_IMPORTED_MODULE_8__["default"]
     }, {
       path: "create",
-      name: 'createEvent',
+      name: "createEvent",
       component: _views_auth_admin_CreateEventComponent__WEBPACK_IMPORTED_MODULE_6__["default"],
       meta: {
         requiresAuth: true
@@ -63211,11 +63289,12 @@ axiosInstance.interceptors.request.use(function (config) {
   return Promise.reject(error);
 });
 axiosInstance.interceptors.response.use(null, function (error) {
+  /*
   if (error.response.status == 401) {
-    console.log("sem autorização");
-    _store__WEBPACK_IMPORTED_MODULE_1__["default"].actions.removeCredentials("removeCredentials");
+      console.log("sem autorização");
+      store.actions.removeCredentials("removeCredentials");
   }
-
+  */
   return Promise.reject(error);
 });
 var api = {
@@ -63285,7 +63364,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     createTable: function createTable(context, payload) {
       context.commit("UPDATE_LOADING", true);
       _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/event", payload).then(function (_) {
-        context.commit("UPDATE_ERROR", false);
+        context.commit("UPDATE_ERROR", []);
+      })["catch"](function (err) {
+        context.commit("UPDATE_ERROR", err.response.data.errors);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -63294,7 +63375,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       context.commit("UPDATE_LOADING", true);
       _services__WEBPACK_IMPORTED_MODULE_1__["api"].get("/event", payload).then(function (response) {
         context.commit("UPDATE_TABLE", response.data.content);
-        context.commit("UPDATE_ERROR", false);
+        context.commit("UPDATE_ERROR", []);
+      })["catch"](function (err) {
+        context.commit("UPDATE_ERROR", err.response.data.errors);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -63302,8 +63385,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     showTable: function showTable(context, payload) {
       context.commit("UPDATE_LOADING", true);
       var response = _services__WEBPACK_IMPORTED_MODULE_1__["api"].get("/event/" + payload).then(function (response) {
-        context.commit("UPDATE_ERROR", false);
+        context.commit("UPDATE_ERROR", []);
         return response;
+      })["catch"](function (err) {
+        context.commit("UPDATE_ERROR", err.response.data.errors);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -63312,7 +63397,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     deleteTable: function deleteTable(context, payload) {
       context.commit("UPDATE_LOADING", true);
       _services__WEBPACK_IMPORTED_MODULE_1__["api"]["delete"]("/event/".concat(payload)).then(function (_) {
-        context.commit("UPDATE_ERROR", false);
+        context.commit("UPDATE_ERROR", []);
+      })["catch"](function (err) {
+        context.commit("UPDATE_ERROR", err.response.data.errors);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -63321,7 +63408,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       context.commit("UPDATE_LOADING", true);
       _services__WEBPACK_IMPORTED_MODULE_1__["api"].put("/event/".concat(payload.id), payload).then(function (response) {
         context.commit("UPDATE_TABLE", response.data.content);
-        context.commit("UPDATE_ERROR", false);
+        context.commit("UPDATE_ERROR", []);
+      })["catch"](function (err) {
+        context.commit("UPDATE_ERROR", err.response.data.errors);
       })["finally"](function (_) {
         context.commit("UPDATE_LOADING", false);
       });
@@ -63336,8 +63425,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context.next = 3;
                 return _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/login", payload).then(function (resp) {
                   context.commit("UPDATE_LOGIN", true);
+                  context.commit("UPDATE_ERROR", []);
                   $cookies.set("token", resp.data.token);
-                  context.commit("UPDATE_ERROR", false);
+                  $router.push({
+                    name: "index"
+                  });
+                })["catch"](function (err) {
+                  context.commit("UPDATE_ERROR", err.response.data.errors);
                 })["finally"](function (_) {
                   context.commit("UPDATE_LOADING", false);
                 });
@@ -63356,13 +63450,17 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                console.log(context);
                 context.commit("UPDATE_LOADING", true);
-                _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/register", payload).then(function (resp) {
+                _context2.next = 3;
+                return _services__WEBPACK_IMPORTED_MODULE_1__["api"].post("/register", payload).then(function (resp) {
                   context.commit("UPDATE_LOGIN", true);
-                  console.log(resp.data.token);
+                  context.commit("UPDATE_ERROR", []);
                   $cookies.set("token", resp.data.token);
-                  context.commit("UPDATE_ERROR", false);
+                  $router.push({
+                    name: "index"
+                  });
+                })["catch"](function (err) {
+                  context.commit("UPDATE_ERROR", err.response.data.errors);
                 })["finally"](function (_) {
                   context.commit("UPDATE_LOADING", false);
                 });
@@ -63384,7 +63482,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         context.commit("UPDATE_LOADING", false);
       });
     },
-    removeCredentials: function removeCredentials(context, _) {
+    removeCredentials: function removeCredentials() {
       $cookies.remove("token");
       _routes__WEBPACK_IMPORTED_MODULE_2__["default"].push({
         name: "login"
@@ -63758,8 +63856,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\evert\Documents\projetos\backend\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\evert\Documents\projetos\backend\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Pichau\Documents\exercicios\backend\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Pichau\Documents\exercicios\backend\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

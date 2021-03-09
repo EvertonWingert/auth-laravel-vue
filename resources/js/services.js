@@ -20,10 +20,12 @@ axiosInstance.interceptors.request.use(
     }
 );
 axiosInstance.interceptors.response.use(null, error => {
+    /*
     if (error.response.status == 401) {
         console.log("sem autorização");
         store.actions.removeCredentials("removeCredentials");
     }
+    */
 
     return Promise.reject(error);
 });

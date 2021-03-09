@@ -8,14 +8,13 @@ import NotFound from "./components/NotFoundComponent";
 import CreateEvent from "./views/auth/admin/CreateEventComponent";
 import EditEvent from "./views/auth/admin/EditEventComponent";
 import Table from "./components/TableComponent";
-import VueCookies from 'vue-cookies';
+import VueCookies from "vue-cookies";
 
 Vue.use(VueRouter);
 
 const router = new VueRouter({
     mode: "history",
     routes: [
-
         {
             path: "/login",
             name: "login",
@@ -39,17 +38,16 @@ const router = new VueRouter({
             children: [
                 {
                     path: "index",
-                    name: 'index',
-                    component: Table,
+                    name: "index",
+                    component: Table
                 },
                 {
                     path: "create",
-                    name: 'createEvent',
+                    name: "createEvent",
                     component: CreateEvent,
                     meta: {
                         requiresAuth: true
-                    },
-                    
+                    }
                 },
                 {
                     path: "edit/:id",
@@ -58,25 +56,22 @@ const router = new VueRouter({
                     props: true,
                     meta: {
                         requiresAuth: true
-                    },
-                    
-                },
-            ],
+                    }
+                }
+            ]
         },
-          
-        
+
         {
             path: "/:catchAll(.*)",
             name: "NotFound",
             component: NotFound
         }
-    ],
+    ]
 });
 
 router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.guest)) {
         if (VueCookies.get("token")) {
-            
             next("/evento");
         }
     }
@@ -84,7 +79,7 @@ router.beforeEach((to, from, next) => {
         if (!VueCookies.get("token")) {
             next("/login");
         }
-    } 
+    }
     next();
 });
 

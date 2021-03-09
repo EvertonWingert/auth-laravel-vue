@@ -5,111 +5,123 @@
         <div class="col-12 col-md-5 col-xl-4 my-5">
           <h1 class="text-center mb-3">Register</h1>
 
-          <form @submit.prevent="register">
-            <!-- Name -->
-            <div class="form-group">
-              <!-- Label -->
-              <label>Name</label>
-
-              <!-- Input -->
-              <input
-                type="text"
-                class="form-control"
-                :class="{ 'is-invalid': error || $v.formData.name.$error }"
-                v-model="formData.name"
-                @change="$v.formData.name.$touch()"
-                id="inputName"
-                autocomplete="name"
-                required
-              />
-              <div v-if="$v.formData.name.$error" class="invalid-feedback">
-                Este campo é requerido.
-              </div>
-              <div v-if="error" class="invalid-feedback">
-                <div v-for="(v, k) in error.name" :key="k" role="alert">
-                  <p>{{ v[0] }}</p>
-                </div>
-              </div>
+          <div v-if="loading" class="text-center">
+            <div class="spinner-border" role="status">
+              <span class="sr-only">Loading...</span>
             </div>
-            <!-- Email address -->
-            <div class="form-group">
-              <!-- Label -->
-              <label>Email Address</label>
+          </div>
+          <div v-else>
+            <form @submit.prevent="register">
+              <!-- Name -->
+              <div class="form-group">
+                <!-- Label -->
+                <label>Name</label>
 
-              <!-- Input -->
-              <input
-                class="form-control"
-                :class="{
-                  'is-invalid': error || $v.formData.email.$error,
-                }"
-                v-model="formData.email"
-                @change="$v.formData.email.$touch()"
-                id="inputEmail"
-                autocomplete="email"
-                required
-              />
-              <div v-if="$v.formData.email.$error" class="invalid-feedback">
-                Este campo é requerido.
-              </div>
-              <div v-if="error" class="invalid-feedback">
-                <div v-for="(v, k) in error.email" :key="k" role="alert">
-                  <p>{{ v }}</p>
-                </div>
-              </div>
-            </div>
-
-            <!-- Password -->
-            <div class="form-group">
-              <div class="row">
-                <div class="col">
-                  <!-- Label -->
-                  <label>Password</label>
-                </div>
-              </div>
-              <!-- / .row -->
-
-              <!-- Input group -->
-              <div class="input-group input-group-merge">
                 <!-- Input -->
                 <input
-                  type="password"
+                  type="text"
                   class="form-control"
-                  v-model="formData.password"
                   :class="{
-                    'is-invalid': error || $v.formData.password.$error,
+                    'is-invalid':
+                      $v.formData.name.$error || (error && error.name),
                   }"
-                  @change="$v.formData.password.$touch()"
-                  id="inputPassword"
-                  autocomplete="new-password"
+                  v-model="formData.name"
+                  @change="$v.formData.name.$touch()"
+                  id="inputName"
+                  autocomplete="name"
                   required
                 />
-                <div
-                  v-if="$v.formData.password.$error"
-                  class="invalid-feedback"
-                >
-                  Este campo precisa ter pelo menos 8 digitos
+                <div v-if="$v.formData.name.$error" class="invalid-feedback">
+                  Este campo é requerido.
                 </div>
                 <div v-if="error" class="invalid-feedback">
-                  <div v-for="(v, k) in error.password" :key="k" role="alert">
+                  <div v-for="(v, k) in error.name" :key="k" role="alert">
                     <p>{{ v }}</p>
                   </div>
                 </div>
               </div>
-            </div>
+              <!-- Email address -->
+              <div class="form-group">
+                <!-- Label -->
+                <label>Email Address</label>
 
-            <!-- Submit -->
-            <button class="btn btn-lg btn-block btn-primary mb-3">
-              Registrar
-            </button>
+                <!-- Input -->
+                <input
+                  type="email"
+                  class="form-control"
+                  :class="{
+                    'is-invalid':
+                      $v.formData.email.$error || (error && error.email),
+                  }"
+                  v-model="formData.email"
+                  @change="$v.formData.email.$touch()"
+                  id="inputEmail"
+                  autocomplete="email"
+                  required
+                />
+                <div v-if="$v.formData.email.$error" class="invalid-feedback">
+                  Digite um email valido
+                </div>
+                <div v-if="error" class="invalid-feedback">
+                  <div v-for="(v, k) in error.email" :key="k" role="alert">
+                    <p>{{ v }}</p>
+                  </div>
+                </div>
+              </div>
 
-            <!-- Link -->
-            <div class="text-center">
-              <small class="text-muted text-center">
-                Já tem uma conta?
-                <router-link to="login"><a>Login</a></router-link>
-              </small>
-            </div>
-          </form>
+              <!-- Password -->
+              <div class="form-group">
+                <div class="row">
+                  <div class="col">
+                    <!-- Label -->
+                    <label>Password</label>
+                  </div>
+                </div>
+                <!-- / .row -->
+
+                <!-- Input group -->
+                <div class="input-group input-group-merge">
+                  <!-- Input -->
+                  <input
+                    type="password"
+                    class="form-control"
+                    v-model="formData.password"
+                    :class="{
+                      'is-invalid':
+                        $v.formData.password.$error ||
+                        (error && error.password),
+                    }"
+                    @change="$v.formData.password.$touch()"
+                    id="inputPassword"
+                    autocomplete="new-password"
+                    required
+                  />
+
+                  <div v-if="$v.formData.email.$error" class="invalid-feedback">
+                    Este campo precisa ter 8 digitos
+                  </div>
+                  <div v-if="error" class="invalid-feedback">
+                    <div v-for="(v, k) in error.password" :key="k" role="alert">
+                      <p>{{ v }}</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Submit -->
+              <button class="btn btn-lg btn-block btn-primary mb-3">
+                Registrar
+              </button>
+
+              <!-- Link -->
+              <div class="text-center">
+                <small class="text-muted text-center">
+                  Já tem uma conta?
+                  <router-link to="login"><a>Login</a></router-link>
+                </small>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
@@ -140,25 +152,27 @@ export default {
   validations: {
     formData: {
       name: { required },
-      email: { required, email },
+      email: { required },
       password: { required, minLength: minLength(8) },
     },
   },
   methods: {
     register() {
       if (!this.$v.$invalid) {
-        this.$store.dispatch("registerUser", this.formData).then((_) => {
-          if (this.$store.state.login) {
-            this.$router.push({ name: "index" });
-          }
-        });
+        this.$store
+          .dispatch("registerUser", this.formData)
+
+          .catch((_) => {
+            console.log(this.error);
+          });
       } else {
         this.$v.$touch();
       }
     },
   },
-  mounted() {
-    this.$store.commit("UPDATE_ERROR", null);
+  created() {
+    this.$store.commit("UPDATE_LOGIN", false);
+    this.$store.commit("UPDATE_ERROR", []);
   },
 };
 </script>
