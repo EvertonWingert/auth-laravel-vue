@@ -77,7 +77,7 @@ export default {
     },
     
       isAuth() {
-        return this.$store.state.login;
+        return this.$store.state.isAuthenticated;
       },
     
   },

@@ -45,14 +45,12 @@
 export default {
   computed: {
     isAuth() {
-      return this.$store.state.login;
+      return this.$store.state.isAuthenticated;
     },
   },
   methods: {
     logout() {
-      this.$store.dispatch("logoutUser").then((_) => {
-        this.$router.push({ name: "entrada" });
-      });
+      this.$store.dispatch("logoutUser");
     },
   },
 };

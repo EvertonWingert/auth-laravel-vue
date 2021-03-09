@@ -1,10 +1,10 @@
 import { api } from "./services";
-import { handleErrors } from "./handleError";
+import router from "./routes";
 
 export default {
     state: {
         table: [],
-        login: false,
+        isAuthenticated: false,
         isLoading: false,
         error: []
     },
@@ -30,7 +30,6 @@ export default {
                     context.commit("UPDATE_ERROR", false);
                 })
                 .catch(error => {
-                    handleErrors(error);
                     context.commit("UPDATE_ERROR", error.response.data.error);
                 })
                 .finally(_ => {
@@ -44,10 +43,7 @@ export default {
                     context.commit("UPDATE_TABLE", response.data.content);
                     context.commit("UPDATE_ERROR", false);
                 })
-                .catch(error => {
-                    handleErrors(error);
-                    context.commit("UPDATE_ERROR", error.response.data.error);
-                })
+
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
                 });
@@ -60,10 +56,7 @@ export default {
                     context.commit("UPDATE_ERROR", false);
                     return response;
                 })
-                .catch(error => {
-                    handleErrors(error);
-                    context.commit("UPDATE_ERROR", error.response.data.error);
-                })
+
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
                 });
@@ -75,10 +68,7 @@ export default {
                 .then(_ => {
                     context.commit("UPDATE_ERROR", false);
                 })
-                .catch(error => {
-                    handleErrors(error);
-                    context.commit("UPDATE_ERROR", error.response.data.error);
-                })
+
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
                 });
@@ -90,10 +80,7 @@ export default {
                     context.commit("UPDATE_TABLE", response.data.content);
                     context.commit("UPDATE_ERROR", false);
                 })
-                .catch(error => {
-                    handleErrors(error);
-                    context.commit("UPDATE_ERROR", error.response.data.error);
-                })
+
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
                 });
@@ -109,10 +96,7 @@ export default {
 
                     context.commit("UPDATE_ERROR", false);
                 })
-                .catch(error => {
-                    handleErrors(error);
-                    context.commit("UPDATE_ERROR", error.response.data.errors);
-                })
+
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
                 });
@@ -127,18 +111,26 @@ export default {
                     $cookies.set("token", resp.data.token);
                     context.commit("UPDATE_ERROR", false);
                 })
-                .catch(err => {
-                    handleErrors(err);
-                    context.commit("UPDATE_ERROR", err.response.data.errors);
-                })
+
                 .finally(_ => {
                     context.commit("UPDATE_LOADING", false);
                 });
         },
         logoutUser(context, _) {
+            api.post(`/logout`)
+                .then(_ => {
+                    context.commit("removeCredentials");
+                })
+
+                .finally(_ => {
+                    context.commit("UPDATE_LOADING", false);
+                });
+        },
+        removeCredentials(context, _) {
             context.commit("UPDATE_ERROR", false);
             context.commit("UPDATE_LOGIN", false);
             $cookies.remove("token");
+            router.push({ name: "login" });
         }
     }
 };

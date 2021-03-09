@@ -1,5 +1,5 @@
 import axios from "axios";
-
+import store from './store';
 const axiosInstance = axios.create({
     baseURL: "http://127.0.0.1:8000/api",
     headers: {
@@ -22,8 +22,7 @@ axiosInstance.interceptors.request.use(
 axios.interceptors.response.use(null, (error) => {
     if (error.response.status == 401 ) {
         console.log('sem autorização')
-      store.commit('logout')
-      router.push('/login')
+        store.actions.removeCredentials("removeCredentials");
     }
 
     return Promise.reject(error)
