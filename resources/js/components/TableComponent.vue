@@ -1,18 +1,18 @@
 <template>
   <div class="container">
+    <form class="">
+      <input
+        v-model="search"
+        class="col-6 form-control"
+        type="search"
+        placeholder="Search"
+        aria-label="Search"
+      />
+    </form>
+    <router-link v-if="isAuth" :to="{ name: 'createEvent' }">
+      <button class="btn btn-primary">Criar evento</button>
+    </router-link>
     <div class="table-responsive mt-5 card rounded shadow p-3">
-      <form class="row p-3 justify-content-center">
-        <input
-          v-model="search"
-          class="col-6 form-control"
-          type="search"
-          placeholder="Search"
-          aria-label="Search"
-        />
-      </form>
-      <router-link v-if="isAuth" :to="{ name: 'createEvent' }">
-        <button class="btn btn-primary">Criar evento</button>
-      </router-link>
       <div v-if="loading" class="text-center">
         <div class="spinner-border" role="status">
           <span class="sr-only">Loading...</span>

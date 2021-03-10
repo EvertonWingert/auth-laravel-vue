@@ -89,7 +89,7 @@
                     :class="{
                       'is-invalid':
                         $v.formData.password.$error ||
-                        error.hasOwnProperty('password')
+                        error.hasOwnProperty('password'),
                     }"
                     @change="$v.formData.password.$touch()"
                     id="inputPassword"
@@ -159,12 +159,7 @@ export default {
   methods: {
     register() {
       if (!this.$v.$invalid) {
-        this.$store
-          .dispatch("registerUser", this.formData)
-
-          .catch((_) => {
-            console.log(this.error);
-          });
+        this.$store.dispatch("registerUser", this.formData);
       } else {
         this.$v.$touch();
       }

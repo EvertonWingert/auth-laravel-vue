@@ -1,9 +1,6 @@
 <template>
-  <div
-    class="container "
-    style="height: 100vh"
-  >
-   <div class="card card rounded shadow p-3">
+  <div class="container" style="height: 100vh">
+    <div class="card card rounded shadow p-3">
       <div class="card-body">
         <h5 class="card-title text-center">Edit event</h5>
         <form>
@@ -14,10 +11,18 @@
                 v-model="formData.name"
                 class="form-control"
                 placeholder="Nome"
-                :class="{ 'is-invalid': $v.formData.name.$error }"
+                :class="{
+                  'is-invalid':
+                    error.hasOwnProperty('name') || $v.formData.name.$error,
+                }"
               />
               <div v-if="$v.formData.name.$error" class="invalid-feedback">
                 Este campo é requerido.
+              </div>
+              <div v-if="error" class="invalid-feedback">
+                <div v-for="(v, k) in error.name" :key="k" role="alert">
+                  <p>{{ v }}</p>
+                </div>
               </div>
             </div>
             <div class="col-auto mb-3">
@@ -27,10 +32,18 @@
                 class="form-control"
                 placeholder="Data"
                 max="9999-12-31"
-                :class="{ 'is-invalid': $v.formData.date.$error }"
+                :class="{
+                  'is-invalid':
+                    error.hasOwnProperty('date') || $v.formData.date.$error,
+                }"
               />
               <div v-if="$v.formData.date.$error" class="invalid-feedback">
                 Este campo é requerido.
+              </div>
+              <div v-if="error" class="invalid-feedback">
+                <div v-for="(v, k) in error.date" :key="k" role="alert">
+                  <p>{{ v }}</p>
+                </div>
               </div>
             </div>
             <div class="col-auto mb-3">
@@ -39,10 +52,18 @@
                 v-model="formData.desc"
                 class="form-control"
                 placeholder="Descrição"
-                :class="{ 'is-invalid': $v.formData.desc.$error }"
+                :class="{
+                  'is-invalid':
+                    error.hasOwnProperty('desc') || $v.formData.desc.$error,
+                }"
               />
               <div v-if="$v.formData.desc.$error" class="invalid-feedback">
                 Este campo é requerido.
+              </div>
+              <div v-if="error" class="invalid-feedback">
+                <div v-for="(v, k) in error.desc" :key="k" role="alert">
+                  <p>{{ v }}</p>
+                </div>
               </div>
             </div>
             <div class="col-auto mb-3">
@@ -63,6 +84,7 @@
 
 <script>
 import { required } from "vuelidate/lib/validators";
+import Swal from "sweetalert2";
 
 export default {
   props: ["id"],
@@ -99,20 +121,29 @@ export default {
     },
   },
   methods: {
-
     async updateEvent() {
       console.log(this.formData);
       if (!this.$v.$invalid) {
-        this.$store.dispatch("updateTable", this.formData).then((_) => {
-          this.error ? Swal.fire('Oops...', this.$store.state.error, 'error')
- : Swal.fire({
-  position: 'top-end',
-  icon: 'success',
-  title: 'Your work has been saved',
-  showConfirmButton: false,
-  timer: 1500
-});
-        });
+        this.$store
+          .dispatch("updateTable", this.formData)
+          .then((_) => {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Editado com sucesso",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          })
+          .catch((_) =>
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Erro ao editar",
+              showConfirmButton: false,
+              timer: 1500,
+            })
+          );
       } else {
         this.$v.$touch();
       }

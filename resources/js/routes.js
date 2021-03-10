@@ -35,11 +35,17 @@ const router = new VueRouter({
             path: "/evento",
             name: "evento",
             component: Evento,
+            meta: {
+                requiresAuth: true
+            },
             children: [
                 {
                     path: "index",
                     name: "index",
-                    component: Table
+                    component: Table,
+                    meta: {
+                        requiresAuth: true
+                    }
                 },
                 {
                     path: "create",

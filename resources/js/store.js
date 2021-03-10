@@ -97,15 +97,14 @@ export default {
                     context.commit("UPDATE_LOADING", false);
                 });
         },
-        async loginUser(context, payload) {
+        loginUser(context, payload) {
             context.commit("UPDATE_LOADING", true);
-            await api
-                .post("/login", payload)
-                .then(resp => {
+            api.post("/login", payload)
+                .then(_ => {
                     context.commit("UPDATE_LOGIN", true);
                     context.commit("UPDATE_ERROR", []);
-                    $cookies.set("token", resp.data.token);
-                    $router.push({ name: "index" });
+                    Vue.$cookies.set("token", resp.data.token);
+                    router.push({ name: "index" });
                 })
                 .catch(err => {
                     context.commit("UPDATE_ERROR", err.response.data.errors);
@@ -114,17 +113,17 @@ export default {
                     context.commit("UPDATE_LOADING", false);
                 });
         },
-        async registerUser(context, payload) {
+        registerUser(context, payload) {
             context.commit("UPDATE_LOADING", true);
-            await api
-                .post("/register", payload)
+            api.post("/register", payload)
                 .then(resp => {
                     context.commit("UPDATE_LOGIN", true);
                     context.commit("UPDATE_ERROR", []);
-                    $cookies.set("token", resp.data.token);
-                    $router.push({ name: "index" });
+                    Vue.$cookies.set("token", resp.data.token);
+                    router.push({ name: "index" });
                 })
                 .catch(err => {
+                    console.log(err);
                     context.commit("UPDATE_ERROR", err.response.data.errors);
                 })
                 .finally(_ => {
@@ -145,7 +144,7 @@ export default {
         },
 
         removeCredentials() {
-            $cookies.remove("token");
+            Vue.$cookies.remove("token");
             router.push({ name: "login" });
         }
     }

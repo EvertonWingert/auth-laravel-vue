@@ -11,14 +11,24 @@ use Illuminate\Support\Facades\Route;
 /* Auth */
 Route::post('login',[AuthController::class,'login']);
 Route::post('register',[AuthController::class,'register']);
-Route::get('event', [EventoController::class, 'index']);
 
 
 /* Rotas autenticadas */
 Route::middleware('auth:sanctum')->group(function(){
-    Route::resource('event', EventoController::class)->except('index');
+    Route::resource('event', EventoController::class);
     Route::post('logout',[AuthController::class,'logout']);
 });
 
 
 /* Rotas administrativas */
+/*
+só tem acesso o cargo mais alto
+Route::middleware('auth:sanctum')->group(function(){
+    Route::resource('crud', EventoController::class);
+    Route::resource('crud', EventoController::class);
+    Route::resource('crud', EventoController::class);
+    Route::resource('crud', EventoController::class);
+    Route::resource('crud', EventoController::class);
+    Route::post('logout',[AuthController::class,'logout']);
+});
+*/

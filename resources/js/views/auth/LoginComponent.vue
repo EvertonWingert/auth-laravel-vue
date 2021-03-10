@@ -61,7 +61,8 @@
                     id="inputPassword"
                     :class="{
                       'is-invalid':
-                        $v.formData.password.$error || error.hasOwnProperty('password'),
+                        $v.formData.password.$error ||
+                        error.hasOwnProperty('password'),
                     }"
                     @change="$v.formData.password.$touch()"
                     autocomplete="password"
@@ -133,12 +134,7 @@ export default {
   methods: {
     login() {
       if (!this.$v.$invalid) {
-        this.$store
-          .dispatch("loginUser", this.formData)
-
-          .catch((resp) => {
-            console.log(this.error);
-          });
+        this.$store.dispatch("loginUser", this.formData);
       } else {
         this.$v.$touch();
       }

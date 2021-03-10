@@ -11,14 +11,17 @@
                 v-model="formData.name"
                 class="form-control"
                 placeholder="Nome"
-                :class="{ 'is-invalid': error || $v.formData.name.$error }"
+                :class="{
+                  'is-invalid':
+                    error.hasOwnProperty('name') || $v.formData.name.$error,
+                }"
               />
               <div v-if="$v.formData.name.$error" class="invalid-feedback">
                 Este campo é requerido.
               </div>
-              <div v-if="error && error.name" class="invalid-feedback">
-                <div v-for="(v, k) in error" :key="k" role="alert">
-                  <p>{{ v[0] }}</p>
+              <div v-if="error" class="invalid-feedback">
+                <div v-for="(v, k) in error.name" :key="k" role="alert">
+                  <p>{{ v }}</p>
                 </div>
               </div>
             </div>
@@ -29,14 +32,17 @@
                 class="form-control"
                 placeholder="Data"
                 max="9999-12-31"
-                :class="{ 'is-invalid': error || $v.formData.date.$error }"
+                :class="{
+                  'is-invalid':
+                    error.hasOwnProperty('date') || $v.formData.date.$error,
+                }"
               />
               <div v-if="$v.formData.date.$error" class="invalid-feedback">
                 Este campo é requerido.
               </div>
-              <div v-if="error && error.date" class="invalid-feedback">
-                <div v-for="(v, k) in error" :key="k" role="alert">
-                  <p>{{ v[0] }}</p>
+              <div v-if="error" class="invalid-feedback">
+                <div v-for="(v, k) in error.date" :key="k" role="alert">
+                  <p>{{ v }}</p>
                 </div>
               </div>
             </div>
@@ -46,14 +52,17 @@
                 v-model="formData.desc"
                 class="form-control"
                 placeholder="Descrição"
-                :class="{ 'is-invalid': error || $v.formData.desc.$error }"
+                :class="{
+                  'is-invalid':
+                    error.hasOwnProperty('desc') || $v.formData.desc.$error,
+                }"
               />
               <div v-if="$v.formData.desc.$error" class="invalid-feedback">
                 Este campo é requerido.
               </div>
-              <div v-if="error && error.desc" class="invalid-feedback">
-                <div v-for="(v, k) in error" :key="k" role="alert">
-                  <p>{{ v[0] }}</p>
+              <div v-if="error" class="invalid-feedback">
+                <div v-for="(v, k) in error.desc" :key="k" role="alert">
+                  <p>{{ v }}</p>
                 </div>
               </div>
             </div>
@@ -110,17 +119,26 @@ export default {
   methods: {
     saveData() {
       if (!this.$v.$invalid) {
-        this.$store.dispatch("createTable", this.formData).then((_) => {
-          this.error
-            ? Swal.fire("Oops...", this.$store.state.error, "error")
-            : Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: "Your work has been saved",
-                showConfirmButton: false,
-                timer: 1500,
-              });
-        });
+        this.$store
+          .dispatch("createTable", this.formData)
+          .then((_) => {
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Criado com sucesso",
+              showConfirmButton: false,
+              timer: 1500,
+            });
+          })
+          .catch((_) =>
+            Swal.fire({
+              position: "center",
+              icon: "error",
+              title: "Erro ao editar",
+              showConfirmButton: false,
+              timer: 1500,
+            })
+          );
       } else {
         this.$v.$touch();
       }
